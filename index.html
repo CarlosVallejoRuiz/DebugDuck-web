@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DebugDuck — El pato de goma que te ayuda a pensar mejor</title>
+
+  <!-- SEO -->
+  <meta name="description" content="DebugDuck es un widget de escritorio para rubber duck debugging con IA local. Habla con el pato, ordena tus ideas, sin enviar datos a ningún lado. Gratis y open source.">
+  <meta name="keywords" content="rubber duck debugging, IA local, LM Studio, widget escritorio, open source, Mac, Apple Silicon">
+  <meta name="author" content="Carlos Vallejo">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="DebugDuck — El pato que te ayuda a pensar">
+  <meta property="og:description" content="IA local. Sin suscripciones. Sin espías. Solo tú y el pato.">
+  <meta property="og:image" content="image/DebugDuck.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://carlosvallejoruiz.github.io/DebugDuck-web/">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DebugDuck — El pato que te ayuda a pensar">
+  <meta name="twitter:description" content="IA local. Sin suscripciones. Sin espías. Solo tú y el pato.">
+  <meta name="twitter:image" content="image/DebugDuck.png">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦆</text></svg>">
+  <link rel="apple-touch-icon" href="image/DebugDuck.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ================================================================
+       RESET & BASE
+       ================================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: #fff;
+      color: #1a1a1a;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Space Mono', monospace;
+    }
+
+    /* ================================================================
+       DESIGN TOKENS
+       ================================================================ */
+    :root {
+      --yellow:        #FFD700;
+      --yellow-light:  #FFFBEA;
+      --yellow-medium: #FFECB3;
+      --yellow-hover:  #FFC800;
+      --dark:          #1a1a1a;
+      --dark-2:        #272727;
+      --text:          #333;
+      --muted:         #666;
+      --white:         #fff;
+      --green:         #22c55e;
+      --radius:        16px;
+      --radius-sm:     8px;
+      --shadow:        0 4px 20px rgba(0,0,0,0.07);
+      --shadow-hover:  0 10px 36px rgba(0,0,0,0.14);
+      --shadow-yellow: 0 6px 28px rgba(255,215,0,0.25);
+      --ease:          cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* ================================================================
+       LAYOUT UTILITIES
+       ================================================================ */
+    .container   { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .section     { padding: 96px 0; }
+    .center      { text-align: center; }
+
+    .tag {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--dark);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 100px;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: clamp(1.9rem, 4vw, 2.9rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 580px;
+    }
+
+    /* ================================================================
+       BUTTONS
+       ================================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 15px 32px;
+      border-radius: 100px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.22s var(--ease), box-shadow 0.22s var(--ease), background 0.22s var(--ease);
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--yellow);
+      color: var(--dark);
+    }
+    .btn-primary:hover {
+      background: var(--yellow-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-yellow);
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-ghost {
+      background: rgba(255,255,255,0.09);
+      color: #fff;
+      border: 1.5px solid rgba(255,255,255,0.25);
+    }
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.5);
+      transform: translateY(-2px);
+    }
+
+    /* ================================================================
+       ANIMATIONS
+       ================================================================ */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-11px); }
+    }
+
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50%       { transform: translateY(-7px) rotate(0.8deg); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,215,0,0); }
+      50%       { box-shadow: 0 0 0 10px rgba(255,215,0,0.15); }
+    }
+
+    /* ================================================================
+       SCROLL REVEAL
+       ================================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity 0.55s var(--ease), transform 0.55s var(--ease);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ================================================================
+       1. HERO
+       ================================================================ */
+    #inicio {
+      background: var(--dark);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #inicio::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255,215,0,0.13) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 80% 80%, rgba(255,215,0,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* Subtle grid texture */
+    #inicio::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+
+    .hero-content { position: relative; z-index: 1; }
+
+    .hero-duck-wrap {
+      animation: float 3.8s ease-in-out infinite;
+      margin-bottom: 36px;
+      display: inline-block;
+    }
+
+    #hero-duck {
+      width: clamp(150px, 22vw, 220px);
+      height: clamp(150px, 22vw, 220px);
+      object-fit: contain;
+      display: block;
+      cursor: pointer;
+      filter: drop-shadow(0 18px 40px rgba(255,215,0,0.28));
+      transition: filter 0.3s ease;
+    }
+    #hero-duck:hover {
+      filter: drop-shadow(0 24px 50px rgba(255,215,0,0.45));
+    }
+
+    .hero-title {
+      font-size: clamp(3.2rem, 9vw, 6rem);
+      font-weight: 900;
+      line-height: 1.02;
+      margin-bottom: 20px;
+      background: linear-gradient(140deg, #ffffff 30%, #FFD700 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.4vw, 1.3rem);
+      color: rgba(255,255,255,0.68);
+      max-width: 560px;
+      margin: 0 auto 44px;
+      line-height: 1.7;
+      font-weight: 400;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+      margin-bottom: 36px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.13);
+      backdrop-filter: blur(4px);
+      padding: 9px 22px;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.62);
+      letter-spacing: 0.02em;
+    }
+
+    .hero-badge .dot {
+      width: 7px; height: 7px;
+      background: var(--yellow);
+      border-radius: 50%;
+      animation: pulse-glow 2.5s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    /* ================================================================
+       2. HISTORIA
+       ================================================================ */
+    #historia {
+      background: var(--white);
+    }
+
+    .historia-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .historia-text blockquote {
+      font-size: 1.07rem;
+      color: var(--text);
+      line-height: 1.85;
+    }
+    .historia-text blockquote p { margin-bottom: 18px; }
+    .historia-text blockquote p:last-child { margin-bottom: 0; }
+
+    .highlight-block {
+      background: var(--yellow-light);
+      border-left: 4px solid var(--yellow);
+      padding: 15px 20px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-weight: 600;
+      font-size: 1rem;
+      margin: 22px 0;
+      color: var(--dark);
+    }
+
+    .historia-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      align-self: center;
+      padding-right: 40px;
+    }
+
+    .historia-duck-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .historia-duck-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -30px;
+      background: radial-gradient(ellipse, var(--yellow-medium) 0%, transparent 68%);
+      border-radius: 50%;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    .historia-duck-img {
+      width: 420px !important;
+      height: 420px !important;
+      object-fit: contain;
+      position: relative;
+      z-index: 1;
+      animation: floatSlow 4.5s ease-in-out infinite;
+      filter: drop-shadow(0 12px 30px rgba(0,0,0,0.12));
+    }
+
+    /* ================================================================
+       3. CÓMO FUNCIONA
+       ================================================================ */
+    #como-funciona {
+      background: var(--yellow-light);
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      position: relative;
+    }
+
+    /* Connector line between steps */
+    .steps-grid::before {
+      content: '';
+      position: absolute;
+      top: 44px;
+      left: calc(16.67% + 14px);
+      right: calc(16.67% + 14px);
+      height: 2px;
+      background: linear-gradient(90deg, var(--yellow) 0%, var(--yellow) 100%);
+      opacity: 0.5;
+      z-index: 0;
+    }
+
+    .step-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 36px 24px 32px;
+      text-align: center;
+      box-shadow: var(--shadow);
+      transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+      position: relative;
+      z-index: 1;
+    }
+    .step-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .step-num {
+      width: 38px; height: 38px;
+      background: var(--yellow);
+      color: var(--dark);
+      font-size: 0.95rem;
+      font-weight: 800;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+    }
+
+    .step-icon  { font-size: 2.4rem; display: block; margin-bottom: 14px; }
+    .step-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 10px; color: var(--dark); }
+    .step-desc  { font-size: 0.93rem; color: var(--muted); line-height: 1.65; }
+
+    /* ================================================================
+       4. FEATURES
+       ================================================================ */
+    #features {
+      background: var(--white);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .feature-card {
+      background: var(--white);
+      border: 2px solid var(--yellow-medium);
+      border-radius: var(--radius);
+      padding: 30px 22px;
+      transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), border-color 0.25s ease;
+      box-shadow: 0 2px 10px rgba(255,215,0,0.12);
+    }
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 32px rgba(255,215,0,0.22);
+      border-color: var(--yellow);
+    }
+
+    .feat-emoji { font-size: 2.2rem; display: block; margin-bottom: 14px; }
+    .feat-title { font-size: 1rem; font-weight: 700; margin-bottom: 7px; color: var(--dark); }
+    .feat-desc  { font-size: 0.88rem; color: var(--muted); line-height: 1.62; }
+
+    /* ================================================================
+       5. REQUISITOS
+       ================================================================ */
+    #requisitos {
+      background: var(--yellow-light);
+    }
+
+    .req-wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .req-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin: 36px 0 20px;
+      text-align: left;
+    }
+
+    .req-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      padding: 15px 20px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--dark);
+      box-shadow: var(--shadow);
+    }
+
+    .req-check {
+      width: 26px; height: 26px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .req-note {
+      font-size: 0.87rem;
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+
+    .req-link {
+      color: var(--dark);
+      font-size: 0.93rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 2px solid var(--yellow);
+      padding-bottom: 2px;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .req-link:hover { color: #7a6200; border-color: #7a6200; }
+
+    /* ================================================================
+       6. DESCARGA CTA
+       ================================================================ */
+    #descarga {
+      background: var(--dark-2);
+      color: #fff;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #descarga::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 110%, rgba(255,215,0,0.11) 0%, transparent 70%),
+        radial-gradient(ellipse 30% 25% at 20% 20%, rgba(255,215,0,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-inner { position: relative; z-index: 1; }
+
+    .cta-duck-wrap {
+      animation: float 3.2s ease-in-out infinite;
+      display: inline-block;
+      margin-bottom: 28px;
+    }
+
+    #cta-duck {
+      width: clamp(110px, 16vw, 165px);
+      object-fit: contain;
+      filter: drop-shadow(0 14px 34px rgba(255,215,0,0.22));
+    }
+
+    .cta-title {
+      font-size: clamp(2rem, 5.5vw, 3.6rem);
+      font-weight: 900;
+      margin-bottom: 14px;
+      color: #fff;
+      line-height: 1.1;
+    }
+
+    .cta-sub {
+      font-size: 1.12rem;
+      color: rgba(255,255,255,0.58);
+      margin-bottom: 48px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .cta-link-sm {
+      color: rgba(255,255,255,0.48);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s ease;
+      border-bottom: 1px solid transparent;
+    }
+    .cta-link-sm:hover { color: rgba(255,255,255,0.8); border-bottom-color: rgba(255,255,255,0.35); }
+
+    .cta-version {
+      margin-top: 36px;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ================================================================
+       7. FOOTER
+       ================================================================ */
+    footer {
+      background: var(--dark);
+      color: rgba(255,255,255,0.5);
+      padding: 44px 0 36px;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      text-align: center;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .footer-brand img {
+      width: 30px; height: 30px;
+      object-fit: contain;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 24px;
+      justify-content: center;
+    }
+    .footer-links a {
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.2s ease;
+    }
+    .footer-links a:hover { color: var(--yellow); }
+
+    .footer-made   { font-size: 0.88rem; color: rgba(255,255,255,0.38); }
+    .footer-sep    { color: rgba(255,255,255,0.15); margin: 0 6px; }
+    .footer-lic    { font-size: 0.78rem; color: rgba(255,255,255,0.22); }
+
+    /* ================================================================
+       NAVBAR
+       ================================================================ */
+    #navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(26, 26, 26, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      text-decoration: none;
+      color: #fff;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+    .nav-brand img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: rgba(255,255,255,0.65);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+    .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+    .nav-links a.nav-cta {
+      background: var(--yellow);
+      color: var(--dark);
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 100px;
+    }
+    .nav-links a.nav-cta:hover { background: var(--yellow-hover); color: var(--dark); }
+
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      line-height: 1;
+    }
+
+    /* ================================================================
+       COMO USAR
+       ================================================================ */
+    #como-usar {
+      background: var(--dark-2);
+      color: #fff;
+    }
+
+    .como-usar-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    .como-usar-header .section-title { color: #fff; }
+    .como-usar-header .section-sub   { color: rgba(255,255,255,0.55); margin: 0 auto; }
+
+    .flow-wrap {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0;
+      position: relative;
+    }
+
+    .flow-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      flex: 1;
+      max-width: 180px;
+    }
+
+    .flow-icon-wrap {
+      width: 80px;
+      height: 80px;
+      background: rgba(255,215,0,0.1);
+      border: 2px solid rgba(255,215,0,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin-bottom: 14px;
+      position: relative;
+      transition: background 0.25s ease, border-color 0.25s ease;
+    }
+    .flow-step:hover .flow-icon-wrap {
+      background: rgba(255,215,0,0.2);
+      border-color: var(--yellow);
+    }
+
+    .flow-num {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 22px;
+      height: 22px;
+      background: var(--yellow);
+      color: var(--dark);
+      font-size: 0.7rem;
+      font-weight: 800;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flow-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .flow-desc {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.55;
+    }
+
+    .flow-arrow {
+      flex-shrink: 0;
+      align-self: flex-start;
+      margin-top: 26px;
+      color: rgba(255,215,0,0.5);
+      font-size: 1.4rem;
+      padding: 0 4px;
+    }
+
+    /* ================================================================
+       CONFIGURACION
+       ================================================================ */
+    #configuracion {
+      background: var(--yellow-light);
+    }
+
+    .config-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .config-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .config-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      box-shadow: var(--shadow);
+      border: 2px solid var(--yellow-medium);
+    }
+
+    .config-card-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Toggle visual — Card 1 */
+    .toggle-row {
+      display: flex;
+      background: var(--yellow-light);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 16px;
+      gap: 4px;
+    }
+    .toggle-opt {
+      flex: 1;
+      padding: 8px 10px;
+      border-radius: 7px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-align: center;
+      cursor: default;
+      color: var(--muted);
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .toggle-opt.active {
+      background: var(--white);
+      color: var(--dark);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    .toggle-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    /* Slider visual — Card 2 */
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .slider-state {
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+    .slider-hint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* Tamagotchi — Card 3 */
+    .tama-toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .tama-toggle-label { font-size: 0.85rem; font-weight: 600; color: var(--dark); }
+    .tama-switch {
+      width: 44px; height: 24px;
+      background: var(--green);
+      border-radius: 100px;
+      position: relative;
+    }
+    .tama-switch::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 22px;
+      width: 18px; height: 18px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .life-bar-label { font-size: 0.75rem; color: var(--muted); margin-bottom: 6px; }
+    .life-bar-track {
+      width: 100%;
+      height: 8px;
+      background: var(--yellow-medium);
+      border-radius: 100px;
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+    .life-bar-fill {
+      height: 100%;
+      width: 72%;
+      background: linear-gradient(90deg, var(--yellow), #FFA500);
+      border-radius: 100px;
+    }
+    .tama-moods {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .tama-mood {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .tama-mood-icon {
+      font-size: 1.1rem;
+      width: 24px;
+      text-align: center;
+    }
+
+    /* ================================================================
+       CONFIG — INTERACTIVE ADDITIONS
+       ================================================================ */
+
+    .hidden { display: none !important; }
+
+    /* Personality tabs */
+    .toggle-opt { cursor: pointer; }
+    .toggle-opt.active {
+      background: var(--yellow);
+      color: var(--dark);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    }
+
+    .tab-feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-top: 14px;
+    }
+    .tab-feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.86rem;
+      color: var(--text);
+      line-height: 1.45;
+    }
+    .tab-check { color: var(--green); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+    .tab-content { transition: opacity 0.25s ease; }
+    .tab-content.hidden { opacity: 0; }
+
+    /* Sarcasm slider */
+    .slider-badge {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--dark);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-bottom: 10px;
+    }
+
+    .sarcasm-slider {
+      --thumb-color: var(--yellow);
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 100px;
+      background: linear-gradient(90deg, #22c55e 0%, var(--yellow) 50%, #ef4444 100%);
+      outline: none;
+      cursor: pointer;
+      margin: 8px 0 16px;
+      display: block;
+    }
+    .sarcasm-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 2.5px solid var(--thumb-color);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      transition: border-color 0.25s ease, transform 0.15s ease;
+    }
+    .sarcasm-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+    .sarcasm-slider::-moz-range-thumb {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 2.5px solid var(--thumb-color);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .slider-state-box { transition: opacity 0.25s ease; }
+    .slider-state { font-size: 0.9rem; font-weight: 700; color: var(--dark); margin-bottom: 6px; }
+    .slider-hint  { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+
+    /* Interactive switch */
+    .tama-switch-wrap {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+    .tama-switch-visual {
+      width: 44px; height: 24px;
+      background: var(--green);
+      border-radius: 100px;
+      position: relative;
+      transition: background 0.25s ease;
+      flex-shrink: 0;
+    }
+    .tama-switch-visual.off { background: #bbb; }
+    .tama-switch-visual::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 22px;
+      width: 18px; height: 18px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      transition: left 0.25s ease;
+    }
+    .tama-switch-visual.off::after { left: 3px; }
+
+    .config-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--yellow-medium);
+    }
+
+    /* ================================================================
+       RESPONSIVE
+       ================================================================ */
+    @media (max-width: 880px) {
+      .historia-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+      .historia-visual { order: -1; }
+
+      .steps-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .steps-grid::before { display: none; }
+
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+
+      .flow-wrap {
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+      }
+      .flow-step  { max-width: 280px; }
+      .flow-arrow { transform: rotate(90deg); margin: 4px 0; align-self: center; }
+
+      .nav-links { display: none; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0; right: 0;
+        background: rgba(26,26,26,0.97);
+        padding: 16px 24px 24px;
+        gap: 4px;
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+      }
+      .nav-links.open a { padding: 10px 12px; }
+      .nav-toggle { display: block; }
+    }
+
+    @media (max-width: 580px) {
+      .section { padding: 72px 0; }
+
+      .features-grid { grid-template-columns: 1fr; }
+      .config-grid   { grid-template-columns: 1fr; }
+
+      .hero-buttons { flex-direction: column; align-items: center; }
+      .btn {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVBAR
+       ============================================================ -->
+  <nav id="navbar" role="navigation" aria-label="Navegación principal">
+    <div class="nav-inner container">
+      <a href="#inicio" class="nav-brand">
+        <img src="image/DebugDuck_Idle/frame_000.png" alt="DebugDuck">
+        <span>DebugDuck</span>
+      </a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#historia">Historia</a></li>
+        <li><a href="#como-usar">Cómo usar</a></li>
+        <li><a href="#configuracion">Configuración</a></li>
+        <li><a href="#descarga" class="nav-cta">Descargar</a></li>
+      </ul>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú">☰</button>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       1. HERO
+       ============================================================ -->
+  <section id="inicio">
+    <div class="hero-content">
+      <div class="hero-duck-wrap">
+        <img id="hero-duck" src="image/DebugDuck_Idle/frame_000.png"
+             alt="DebugDuck — tu pato de goma con IA local">
+      </div>
+
+      <h1 class="hero-title">DebugDuck 🦆</h1>
+
+      <p class="hero-sub">
+        El pato de goma que te escucha, te juzga&nbsp;(un&nbsp;poco)
+        y te ayuda a pensar mejor.
+      </p>
+
+      <div class="hero-buttons">
+        <a href="https://github.com/CarlosVallejoRuiz/DebugDuck/releases"
+           target="_blank" rel="noopener noreferrer"
+           class="btn btn-primary">
+          ⬇&nbsp; Descargar DebugDuck
+        </a>
+        <a href="https://github.com/CarlosVallejoRuiz/DebugDuck"
+           target="_blank" rel="noopener noreferrer"
+           class="btn btn-ghost">
+          Ver en GitHub →
+        </a>
+      </div>
+
+      <div class="hero-badge">
+        <span class="dot"></span>
+        Open Source &nbsp;·&nbsp; Gratuito &nbsp;·&nbsp; 100% Local
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       2. LA HISTORIA
+       ============================================================ -->
+  <section id="historia" class="section">
+    <div class="container">
+      <div class="historia-grid">
+
+        <div class="historia-text reveal">
+          <span class="tag">La historia</span>
+          <h2 class="section-title">De dónde viene este pato</h2>
+
+          <blockquote>
+            <p>
+              Todo empezó cuando vi a mi pareja usando GPT-4 para preguntas
+              del día a día. No era culpa suya —&nbsp;nadie te explica que existe
+              una alternativa gratuita, local y privada para el 80% de las consultas.
+              Los tokens premium son finitos, deberían reservarse
+              para lo que realmente los necesita.
+            </p>
+
+            <div class="highlight-block">
+              La chispa real vino de un curso de soldadura.
+              Sí, soldadura.
+            </div>
+
+            <p>
+              Le expliqué a mis compañeros el método del rubber duck debugging
+              —&nbsp;hablarle a un objeto inanimado para ordenar tus ideas.
+              Lo adoptaron para todo: sus proyectos, sus decisiones, su vida.
+            </p>
+
+            <p>
+              Eso confirmó algo que ya sospechaba: <strong>explicar tus
+              problemas en voz alta funciona para todo el mundo</strong>,
+              no solo para programadores.
+            </p>
+
+            <p>DebugDuck nació de esas dos ideas.</p>
+          </blockquote>
+        </div>
+
+        <div class="historia-visual reveal">
+          <div class="historia-duck-wrap">
+            <img src="image/DebugDuck.png" alt="DebugDuck" class="historia-duck-img">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       3. CÓMO FUNCIONA
+       ============================================================ -->
+  <section id="como-funciona" class="section">
+    <div class="container">
+      <div class="center reveal" style="margin-bottom: 60px;">
+        <span class="tag">Cómo funciona</span>
+        <h2 class="section-title">Tres pasos y el pato está listo</h2>
+        <p class="section-sub" style="margin: 0 auto;">
+          Sin configuración complicada. Sin curva de aprendizaje.
+          Solo habla.
+        </p>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card reveal">
+          <div class="step-num">1</div>
+          <span class="step-icon">🎙️</span>
+          <h3 class="step-title">Habla con el pato</h3>
+          <p class="step-desc">
+            Doble clic en el pato y el micrófono se activa.
+            Cuéntale tu problema, tu duda o lo que sea. Sin filtros.
+          </p>
+        </div>
+
+        <div class="step-card reveal">
+          <div class="step-num">2</div>
+          <span class="step-icon">🤔</span>
+          <h3 class="step-title">El pato piensa</h3>
+          <p class="step-desc">
+            Con IA local en tu ordenador, sin internet,
+            sin enviar tus datos a ningún lado.
+            Todo se queda contigo.
+          </p>
+        </div>
+
+        <div class="step-card reveal">
+          <div class="step-num">3</div>
+          <span class="step-icon">💬</span>
+          <h3 class="step-title">El pato responde</h3>
+          <p class="step-desc">
+            Con personalidad. Puede ser mentor paciente
+            o brutalmente directo.
+            Tú eliges cómo quieres que te hable.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CÓMO USAR
+       ============================================================ -->
+  <section id="como-usar" class="section">
+    <div class="container">
+      <div class="como-usar-header reveal">
+        <span class="tag" style="background: rgba(255,215,0,0.15); color: var(--yellow);">Flujo de uso</span>
+        <h2 class="section-title">Cinco pasos, un pato</h2>
+        <p class="section-sub">
+          Así funciona una sesión típica con DebugDuck.
+        </p>
+      </div>
+
+      <div class="flow-wrap reveal">
+
+        <div class="flow-step">
+          <div class="flow-icon-wrap">
+            🖱️
+            <span class="flow-num">1</span>
+          </div>
+          <p class="flow-title">Doble clic</p>
+          <p class="flow-desc">Abre DebugDuck y haz doble clic en el pato para activarlo.</p>
+        </div>
+
+        <div class="flow-arrow">→</div>
+
+        <div class="flow-step">
+          <div class="flow-icon-wrap">
+            🎙️
+            <span class="flow-num">2</span>
+          </div>
+          <p class="flow-title">Habla</p>
+          <p class="flow-desc">Explica tu problema, duda o bloqueo. En voz alta, sin filtros.</p>
+        </div>
+
+        <div class="flow-arrow">→</div>
+
+        <div class="flow-step">
+          <div class="flow-icon-wrap">
+            🤔
+            <span class="flow-num">3</span>
+          </div>
+          <p class="flow-title">El pato piensa</p>
+          <p class="flow-desc">La IA local procesa tu mensaje. Cero internet, cero datos enviados.</p>
+        </div>
+
+        <div class="flow-arrow">→</div>
+
+        <div class="flow-step">
+          <div class="flow-icon-wrap">
+            💬
+            <span class="flow-num">4</span>
+          </div>
+          <p class="flow-title">Responde</p>
+          <p class="flow-desc">El pato te devuelve una respuesta con su personalidad elegida.</p>
+        </div>
+
+        <div class="flow-arrow">→</div>
+
+        <div class="flow-step">
+          <div class="flow-icon-wrap">
+            🎉
+            <span class="flow-num">5</span>
+          </div>
+          <p class="flow-title">¡Eureka!</p>
+          <p class="flow-desc">Cuando lo entiendas, pulsa Eureka. Confeti y pato contento.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       4. FEATURES
+       ============================================================ -->
+  <section id="features" class="section">
+    <div class="container">
+      <div class="center reveal" style="margin-bottom: 60px;">
+        <span class="tag">Características</span>
+        <h2 class="section-title">No es un chatbot más, ES TU PATO!!.</h2>
+        <p class="section-sub" style="margin: 0 auto;">
+          Cada detalle está pensado para que la experiencia
+          se sienta viva, no robótica.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card reveal">
+          <span class="feat-emoji">🥚</span>
+          <h3 class="feat-title">Modo Tamagotchi</h3>
+          <p class="feat-desc">
+            Cuida al pato o se pone de mal humor.
+            Su estado de ánimo afecta cómo te responde.
+            No lo abandones.
+          </p>
+        </div>
+
+        <div class="feature-card reveal">
+          <span class="feat-emoji">🎭</span>
+          <h3 class="feat-title">Personalidad ajustable</h3>
+          <p class="feat-desc">
+            Slider de mentor paciente a sin piedad.
+            Perfecto para principiantes o para seniors
+            que quieren honestidad brutal.
+          </p>
+        </div>
+
+        <div class="feature-card reveal">
+          <span class="feat-emoji">🧠</span>
+          <h3 class="feat-title">Memoria de conversación</h3>
+          <p class="feat-desc">
+            Recuerda el contexto de la sesión para
+            respuestas más coherentes y útiles.
+            El pato no olvida (en la sesión).
+          </p>
+        </div>
+
+        <div class="feature-card reveal">
+          <span class="feat-emoji">🎉</span>
+          <h3 class="feat-title">Confeti al Eureka</h3>
+          <p class="feat-desc">
+            Cuando tengas un momento de claridad,
+            pulsa Eureka y celebra como mereces.
+            Los logros merecen confeti.
+          </p>
+        </div>
+
+        <div class="feature-card reveal">
+          <span class="feat-emoji">🔒</span>
+          <h3 class="feat-title">100% privado y local</h3>
+          <p class="feat-desc">
+            Corre en tu ordenador con LM Studio.
+            Sin APIs, sin suscripciones, sin espías.
+            Lo tuyo es tuyo.
+          </p>
+        </div>
+
+        <div class="feature-card reveal">
+          <span class="feat-emoji">🌍</span>
+          <h3 class="feat-title">Para todo el mundo</h3>
+          <p class="feat-desc">
+            ¿Programador? Perfecto. ¿No programador?
+            También. El rubber duck es universal.
+            Lo probamos en soldadura.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONFIGURACIÓN
+       ============================================================ -->
+  <section id="configuracion" class="section">
+    <div class="container">
+      <div class="config-header reveal">
+        <span class="tag">Configuración</span>
+        <h2 class="section-title">Hazlo tuyo</h2>
+        <p class="section-sub" style="margin: 0 auto;">
+          Cuatro ajustes que cambian completamente cómo el pato te habla.
+        </p>
+      </div>
+
+      <div class="config-grid">
+
+        <!-- Card 1: Personalidad -->
+        <div class="config-card reveal">
+          <h3 class="config-card-title">🎭 Personalidad</h3>
+          <div class="toggle-row">
+            <div class="toggle-opt active" data-tab="dev">🦆 Programador</div>
+            <div class="toggle-opt" data-tab="general">🌍 General</div>
+          </div>
+          <div class="tab-content" id="tab-dev">
+            <ul class="tab-feature-list">
+              <li class="tab-feature-item"><span class="tab-check">✓</span> Referencias técnicas y jerga dev</li>
+              <li class="tab-feature-item"><span class="tab-check">✓</span> Ejemplos de código en respuestas</li>
+              <li class="tab-feature-item"><span class="tab-check">✓</span> Detecta bugs y analiza tu código</li>
+              <li class="tab-feature-item"><span class="tab-check">✓</span> Modo debug socrático (no da la solución directa)</li>
+            </ul>
+          </div>
+          <div class="tab-content hidden" id="tab-general">
+            <ul class="tab-feature-list">
+              <li class="tab-feature-item"><span class="tab-check">✓</span> Sin tecnicismos, lenguaje cotidiano</li>
+              <li class="tab-feature-item"><span class="tab-check">✓</span> Para cualquier tema: vida, decisiones, ideas</li>
+              <li class="tab-feature-item"><span class="tab-check">✓</span> Analogías del mundo real</li>
+              <li class="tab-feature-item"><span class="tab-check">✓</span> Perfecto si no eres programador</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Card 2: Nivel de sarcasmo -->
+        <div class="config-card reveal" id="sarcasm-card">
+          <h3 class="config-card-title">🎚️ Nivel de sarcasmo</h3>
+          <span class="slider-badge hidden" id="sarcasm-badge">Controlado por ti 🎛️</span>
+          <div class="slider-labels">
+            <span>🎓 Mentor</span>
+            <span>😈 Sin piedad</span>
+          </div>
+          <input type="range" class="sarcasm-slider" id="sarcasm-slider" min="0" max="100" value="50">
+          <div class="slider-state-box" id="sarcasm-desc"></div>
+        </div>
+
+        <!-- Card 3: Tamagotchi -->
+        <div class="config-card reveal">
+          <h3 class="config-card-title">🥚 Modo Tamagotchi</h3>
+          <div class="tama-toggle-row">
+            <span class="tama-toggle-label" id="tama-label">Activo</span>
+            <div class="tama-switch-wrap" id="tama-toggle">
+              <div class="tama-switch-visual" id="tama-switch"></div>
+            </div>
+          </div>
+          <div id="tama-on-content">
+            <p class="life-bar-label">Energía del pato</p>
+            <div class="life-bar-track">
+              <div class="life-bar-fill"></div>
+            </div>
+            <div class="tama-moods">
+              <div class="tama-mood"><span class="tama-mood-icon">😄</span><span>Feliz — respuestas cálidas y motivadoras</span></div>
+              <div class="tama-mood"><span class="tama-mood-icon">😐</span><span>Neutro — respuestas directas y concisas</span></div>
+              <div class="tama-mood"><span class="tama-mood-icon">😤</span><span>Molesto — más sarcástico de lo normal</span></div>
+              <div class="tama-mood"><span class="tama-mood-icon">😴</span><span>Dormido — necesita atención urgente</span></div>
+            </div>
+            <p class="toggle-desc" style="margin-top: 12px; font-size: 0.83rem;">
+              El estado de ánimo del pato determina automáticamente su nivel de sarcasmo.
+              Cuídalo con Eurekas y Pomodoros.
+            </p>
+          </div>
+          <div id="tama-off-content" class="hidden">
+            <p class="toggle-desc" style="font-size: 0.85rem;">
+              Modo manual activado — Tú controlas exactamente cómo de directo quieres
+              que sea el pato con el slider de arriba.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 4: Memoria -->
+        <div class="config-card reveal">
+          <h3 class="config-card-title">🧠 Memoria de conversación</h3>
+          <div class="tama-toggle-row">
+            <span class="tama-toggle-label" id="mem-label">Activa</span>
+            <div class="tama-switch-wrap" id="mem-toggle">
+              <div class="tama-switch-visual" id="mem-switch"></div>
+            </div>
+          </div>
+          <div id="mem-on-content">
+            <p class="toggle-desc" style="font-size: 0.85rem;">
+              🧠 El pato recuerda el contexto de la sesión. Respuestas más coherentes
+              en conversaciones largas. La memoria se comprime automáticamente.
+            </p>
+          </div>
+          <div id="mem-off-content" class="hidden">
+            <p class="toggle-desc" style="font-size: 0.85rem;">
+              Cada pregunta es independiente. Más rápido, sin contexto previo.
+            </p>
+          </div>
+          <p class="config-note">⚠️ La memoria NO se guarda entre sesiones.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       5. REQUISITOS
+       ============================================================ -->
+  <section id="requisitos" class="section">
+    <div class="container">
+      <div class="req-wrap reveal">
+        <span class="tag">Requisitos</span>
+        <h2 class="section-title">¿Qué necesitas para usarlo?</h2>
+        <p class="section-sub" style="margin: 0 auto;">
+          Solo tres cosas. Nada raro.
+        </p>
+
+        <div class="req-list">
+          <div class="req-item">
+            <div class="req-check">✓</div>
+            <span>Mac con Apple Silicon &nbsp;(M1 · M2 · M3 · M4)</span>
+          </div>
+          <div class="req-item">
+            <div class="req-check">✓</div>
+            <span>Windows 10 / 11 &nbsp;(x64)</span>
+          </div>
+          <div class="req-item">
+            <div class="req-check">✓</div>
+            <span>LM Studio instalado y con servidor activo</span>
+          </div>
+          <div class="req-item">
+            <div class="req-check">✓</div>
+            <span>Micrófono funcional</span>
+          </div>
+        </div>
+
+        <a href="https://github.com/CarlosVallejoRuiz/DebugDuck#readme"
+           target="_blank" rel="noopener noreferrer"
+           class="req-link">
+          Cómo configurar LM Studio →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       6. DESCARGA CTA
+       ============================================================ -->
+  <section id="descarga" class="section">
+    <div class="container">
+      <div class="cta-inner">
+        <div class="cta-duck-wrap">
+          <img id="cta-duck" src="image/DebugDuck_Idle/frame_000.png"
+               alt="DebugDuck" >
+        </div>
+
+        <h2 class="cta-title">¿Listo para hablar con el pato?</h2>
+        <p class="cta-sub">Gratis. Open source. Sin trampa.</p>
+
+        <div class="cta-buttons">
+          <a href="https://github.com/CarlosVallejoRuiz/DebugDuck/releases"
+             target="_blank" rel="noopener noreferrer"
+             class="btn btn-primary"
+             style="font-size: 1.08rem; padding: 17px 40px;">
+            ⬇&nbsp; Descargar DebugDuck
+          </a>
+          <a href="https://github.com/CarlosVallejoRuiz/DebugDuck"
+             target="_blank" rel="noopener noreferrer"
+             class="cta-link-sm">
+            Ver código fuente en GitHub →
+          </a>
+        </div>
+
+        <p class="cta-version">v0.1.1 — Mac (aarch64) · Windows (x64)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       7. FOOTER
+       ============================================================ -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <a href="#inicio" class="footer-brand">
+          <img src="image/DebugDuck.png" alt="DebugDuck">
+          <span>DebugDuck</span>
+        </a>
+
+        <nav class="footer-links" aria-label="Footer links">
+          <a href="https://github.com/CarlosVallejoRuiz/DebugDuck"
+             target="_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/CarlosVallejoRuiz/DebugDuck/releases"
+             target="_blank" rel="noopener">Releases</a>
+          <a href="https://www.linkedin.com/in/carlosvallejoruiz"
+             target="_blank" rel="noopener">LinkedIn</a>
+        </nav>
+
+        <p class="footer-made">Hecho con 🦆 por Carlos Vallejo</p>
+        <p class="footer-lic">Open source bajo licencia MIT</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT
+       ============================================================ -->
+  <script>
+    'use strict';
+
+    // ── Navbar: mobile toggle ─────────────────────────────────────
+    const navToggle = document.getElementById('nav-toggle');
+    const navLinks  = document.getElementById('nav-links');
+
+    navToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+      navToggle.textContent = navLinks.classList.contains('open') ? '✕' : '☰';
+    });
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        navToggle.textContent = '☰';
+      });
+    });
+
+    // ── Config: Personality tabs ──────────────────────────────────
+    document.querySelectorAll('.toggle-opt[data-tab]').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const card = tab.closest('.config-card');
+        card.querySelectorAll('.toggle-opt').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        card.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+        card.querySelector('#tab-' + tab.dataset.tab).classList.remove('hidden');
+      });
+    });
+
+    // ── Config: Sarcasm slider ────────────────────────────────────
+    const sarcasmSlider = document.getElementById('sarcasm-slider');
+    const sarcasmDesc   = document.getElementById('sarcasm-desc');
+    const sarcasmBadge  = document.getElementById('sarcasm-badge');
+
+    const LEVELS = [
+      { max: 33,  icon: '🎓', title: 'Modo mentor paciente',  desc: 'El pato explica con calma, celebra tus intentos y nunca te juzga. Ideal si estás empezando.',          color: '#22c55e' },
+      { max: 66,  icon: '🦆', title: 'Modo equilibrado',      desc: 'Un toque de sarcasmo al inicio pero siempre útil y directo. Para todos los niveles.',                    color: '#FFD700' },
+      { max: 100, icon: '😈', title: 'Modo sin piedad',        desc: 'Brutalmente directo, sarcasmo técnico al máximo. Solo para los que pueden con todo.',                   color: '#ef4444' }
+    ];
+
+    function updateSarcasmUI(val) {
+      const level = LEVELS.find(l => val <= l.max);
+      sarcasmDesc.innerHTML = `<p class="slider-state">${level.icon} ${level.title}</p><p class="slider-hint">${level.desc}</p>`;
+      sarcasmSlider.style.setProperty('--thumb-color', level.color);
+    }
+
+    sarcasmSlider.addEventListener('input', () => updateSarcasmUI(+sarcasmSlider.value));
+    updateSarcasmUI(50);
+
+    // ── Config: Tamagotchi toggle ─────────────────────────────────
+    let tamaOn = true;
+    const tamaSwitch     = document.getElementById('tama-switch');
+    const tamaLabel      = document.getElementById('tama-label');
+    const tamaOnContent  = document.getElementById('tama-on-content');
+    const tamaOffContent = document.getElementById('tama-off-content');
+
+    document.getElementById('tama-toggle').addEventListener('click', () => {
+      tamaOn = !tamaOn;
+      tamaSwitch.classList.toggle('off', !tamaOn);
+      tamaLabel.textContent = tamaOn ? 'Activo' : 'Manual';
+      tamaOnContent.classList.toggle('hidden', !tamaOn);
+      tamaOffContent.classList.toggle('hidden', tamaOn);
+      sarcasmBadge.classList.toggle('hidden', tamaOn);
+    });
+
+    // ── Config: Memory toggle ─────────────────────────────────────
+    let memOn = true;
+    const memSwitch     = document.getElementById('mem-switch');
+    const memLabel      = document.getElementById('mem-label');
+    const memOnContent  = document.getElementById('mem-on-content');
+    const memOffContent = document.getElementById('mem-off-content');
+
+    document.getElementById('mem-toggle').addEventListener('click', () => {
+      memOn = !memOn;
+      memSwitch.classList.toggle('off', !memOn);
+      memLabel.textContent = memOn ? 'Activa' : 'Desactivada';
+      memOnContent.classList.toggle('hidden', !memOn);
+      memOffContent.classList.toggle('hidden', memOn);
+    });
+
+    // ── Duck Animation Engine ─────────────────────────────────────
+
+    const ANIMS = {
+      idle:    { folder: 'image/DebugDuck_Idle/',        frames: 36, fps: 12 },
+      scratch: { folder: 'image/DebugDuck_RascaCabeza/', frames: 36, fps: 12 },
+      nod:     { folder: 'image/DebugDuck_Asiente/',     frames: 36, fps: 12 }
+    };
+
+    function pad(n) { return String(n).padStart(3, '0'); }
+    function frameSrc(anim, n) { return `${ANIMS[anim].folder}frame_${pad(n)}.png`; }
+
+    function preload(anim, onDone) {
+      const cfg   = ANIMS[anim];
+      let loaded  = 0;
+      const total = cfg.frames;
+      for (let i = 0; i < total; i++) {
+        const img = new Image();
+        img.src = frameSrc(anim, i);
+        img.onload = img.onerror = () => { if (++loaded === total && onDone) onDone(); };
+      }
+    }
+
+    class DuckAnim {
+      constructor(el, def = 'idle') {
+        this.el      = el;
+        this.current = def;
+        this.frame   = 0;
+        this.timer   = null;
+        this.locked  = false;  // true while a one-shot plays
+      }
+
+      _tick(anim, loop, onEnd) {
+        clearInterval(this.timer);
+        this.current = anim;
+        this.frame   = 0;
+        this.el.src  = frameSrc(anim, 0);
+
+        const iv = 1000 / ANIMS[anim].fps;
+        this.timer = setInterval(() => {
+          this.frame++;
+          if (this.frame >= ANIMS[anim].frames) {
+            if (loop) {
+              this.frame = 0;
+            } else {
+              clearInterval(this.timer);
+              this.locked = false;
+              if (onEnd) onEnd();
+              return;
+            }
+          }
+          this.el.src = frameSrc(anim, this.frame);
+        }, iv);
+      }
+
+      loop(anim) {
+        if (this.locked) return;
+        this._tick(anim, true, null);
+      }
+
+      once(anim, thenAnim = 'idle') {
+        if (this.locked) return;
+        this.locked = true;
+        preload(anim, () => this._tick(anim, false, () => this.loop(thenAnim)));
+      }
+    }
+
+    // ── Hero Duck ─────────────────────────────────────────────────
+
+    const heroDuckEl = document.getElementById('hero-duck');
+    const heroDuck   = new DuckAnim(heroDuckEl);
+
+    preload('idle', () => heroDuck.loop('idle'));
+
+    heroDuckEl.addEventListener('mouseenter', () => heroDuck.once('scratch'));
+    heroDuckEl.addEventListener('click',      () => heroDuck.once('nod'));
+
+    // ── CTA Duck ──────────────────────────────────────────────────
+
+    const ctaDuckEl = document.getElementById('cta-duck');
+    const ctaDuck   = new DuckAnim(ctaDuckEl);
+
+    // Start idle loop when section enters viewport
+    const ctaObs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        preload('idle', () => ctaDuck.loop('idle'));
+        ctaObs.disconnect();
+      }
+    }, { threshold: 0.25 });
+    ctaObs.observe(document.getElementById('descarga'));
+
+    // ── Scroll Reveal ─────────────────────────────────────────────
+
+    const reveals = document.querySelectorAll('.reveal');
+
+    const revealObs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        // Stagger siblings slightly
+        const siblings = [...entry.target.parentElement.querySelectorAll('.reveal')];
+        const idx      = siblings.indexOf(entry.target);
+        setTimeout(() => entry.target.classList.add('visible'), idx * 75);
+        revealObs.unobserve(entry.target);
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -32px 0px' });
+
+    reveals.forEach(el => revealObs.observe(el));
+  </script>
+</body>
+</html>
