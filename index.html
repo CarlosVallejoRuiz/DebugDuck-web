@@ -95,10 +95,14 @@
     }
 
     .section-title {
-      font-size: clamp(1.9rem, 4vw, 2.9rem);
+      font-size: clamp(1.8rem, 5vw, 3rem);
       font-weight: 800;
       line-height: 1.15;
       margin-bottom: 14px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+      max-width: 100%;
     }
 
     .section-sub {
@@ -305,6 +309,11 @@
       grid-template-columns: 1fr 1fr;
       gap: 80px;
       align-items: center;
+    }
+
+    .historia-text {
+      max-width: 100%;
+      overflow: hidden;
     }
 
     .historia-text blockquote {
