@@ -314,12 +314,17 @@
     .historia-text {
       max-width: 100%;
       overflow: hidden;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
     }
 
     .historia-text blockquote {
       font-size: 1.07rem;
       color: var(--text);
       line-height: 1.85;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      max-width: 100%;
     }
     .historia-text blockquote p { margin-bottom: 18px; }
     .historia-text blockquote p:last-child { margin-bottom: 0; }
@@ -1076,9 +1081,10 @@
     @media (max-width: 880px) {
       .historia-grid {
         grid-template-columns: 1fr;
-        gap: 48px;
+        gap: 2rem;
       }
-      .historia-visual { order: -1; }
+      .historia-visual { display: none; }
+      .historia-text   { width: 100%; padding: 0; }
 
       .steps-grid {
         grid-template-columns: 1fr;
