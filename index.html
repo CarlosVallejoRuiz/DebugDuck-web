@@ -1671,7 +1671,7 @@
             <div class="arcade-screen">
               <p class="arcade-screen-label">▶ PLAYER 1</p>
               <img id="arcade-duck"
-                   src="image/DebugDuck_Idle/frame_021.png"
+                   src="image/DebugDuck_GameTime/frame_015.png"
                    alt="DebugDuck jugando">
               <p class="arcade-score">SCORE: <span>004200</span></p>
             </div>
@@ -2029,9 +2029,10 @@
     // ── Duck Animation Engine ─────────────────────────────────────
 
     const ANIMS = {
-      idle:    { folder: 'image/DebugDuck_Idle/',        frames: 36, fps: 12 },
-      scratch: { folder: 'image/DebugDuck_RascaCabeza/', frames: 36, fps: 12 },
-      nod:     { folder: 'image/DebugDuck_Asiente/',     frames: 36, fps: 12 }
+      idle:     { folder: 'image/DebugDuck_Idle/',        frames: 36, fps: 12 },
+      scratch:  { folder: 'image/DebugDuck_RascaCabeza/', frames: 36, fps: 12 },
+      nod:      { folder: 'image/DebugDuck_Asiente/',     frames: 36, fps: 12 },
+      gametime: { folder: 'image/DebugDuck_GameTime/',    frames: 36, fps: 12 }
     };
 
     function pad(n) { return String(n).padStart(3, '0'); }
@@ -2116,22 +2117,21 @@
     }, { threshold: 0.25 });
     ctaObs.observe(document.getElementById('descarga'));
 
-    // ── Arcade Duck (loops frames 21-35 of Idle) ──────────────────
+    // ── Arcade Duck (GameTime frames 15-35 en loop) ───────────────
     const arcadeDuckEl = document.getElementById('arcade-duck');
     if (arcadeDuckEl) {
-      const ARCADE_START = 21;
+      const ARCADE_START = 15;
       const ARCADE_END   = 35;
-      const ARCADE_FPS   = 10;
       let   arcadeFrame  = ARCADE_START;
-      let   arcadeTimer  = null;
 
       const arcadeObs = new IntersectionObserver(entries => {
         if (entries[0].isIntersecting) {
-          preload('idle', () => {
-            arcadeTimer = setInterval(() => {
-              arcadeDuckEl.src = frameSrc('idle', arcadeFrame);
+          preload('gametime', () => {
+            arcadeDuckEl.src = frameSrc('gametime', ARCADE_START);
+            setInterval(() => {
+              arcadeDuckEl.src = frameSrc('gametime', arcadeFrame);
               arcadeFrame = arcadeFrame >= ARCADE_END ? ARCADE_START : arcadeFrame + 1;
-            }, 1000 / ARCADE_FPS);
+            }, 1000 / ANIMS.gametime.fps);
           });
           arcadeObs.disconnect();
         }
