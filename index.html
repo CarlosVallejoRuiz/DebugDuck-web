@@ -958,6 +958,214 @@
     }
 
     /* ================================================================
+       ARCADE
+       ================================================================ */
+    #arcade {
+      background: #0a0a0a;
+      color: #00ff00;
+    }
+
+    .arcade-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    /* Left: duck in arcade booth */
+    .arcade-duck-side {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .arcade-booth {
+      position: relative;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* Retro CRT glow behind the duck */
+    .arcade-booth::before {
+      content: '';
+      position: absolute;
+      inset: -40px;
+      background: radial-gradient(ellipse 70% 60% at 50% 55%, rgba(0,255,0,0.18) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: arcadeGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes arcadeGlow {
+      0%, 100% { opacity: 0.7; }
+      50%       { opacity: 1; }
+    }
+
+    /* Scanlines overlay */
+    .arcade-booth::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 3px,
+        rgba(0,0,0,0.08) 3px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      border-radius: 12px;
+    }
+
+    .arcade-screen {
+      background: #050505;
+      border: 2px solid #00ff00;
+      border-radius: 12px;
+      padding: 28px 24px;
+      box-shadow: 0 0 20px rgba(0,255,0,0.3), inset 0 0 30px rgba(0,255,0,0.05);
+      position: relative;
+    }
+
+    .arcade-screen-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: #00ff00;
+      text-align: center;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      opacity: 0.7;
+    }
+
+    #arcade-duck {
+      width: clamp(160px, 22vw, 220px);
+      height: clamp(160px, 22vw, 220px);
+      object-fit: contain;
+      display: block;
+      position: relative;
+      z-index: 1;
+      image-rendering: pixelated;
+    }
+
+    .arcade-score {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: #00ff00;
+      text-align: center;
+      margin-top: 10px;
+      letter-spacing: 0.1em;
+      opacity: 0.8;
+    }
+
+    .arcade-score span {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    /* Right: content */
+    .arcade-content {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .arcade-badge {
+      display: inline-block;
+      background: #00ff00;
+      color: #000;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 100px;
+      width: fit-content;
+      animation: badgePulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes badgePulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,0,0.4); }
+      50%       { box-shadow: 0 0 0 6px rgba(0,255,0,0); }
+    }
+
+    .arcade-title {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    .arcade-sub {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    /* Game cards grid */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .game-card {
+      background: #000;
+      border: 1px solid #00ff00;
+      border-radius: 6px;
+      padding: 14px 16px;
+      cursor: default;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .game-card:hover {
+      border-color: #fff;
+      box-shadow: 0 0 12px rgba(0,255,0,0.5);
+      transform: translateY(-2px);
+    }
+
+    .game-emoji {
+      font-size: 1.5rem;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .game-name {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #00ff00;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .game-desc {
+      font-family: 'Courier New', monospace;
+      font-size: 0.73rem;
+      color: rgba(0,255,0,0.65);
+      line-height: 1.4;
+    }
+
+    /* Info pills */
+    .arcade-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .arcade-pill {
+      background: rgba(0,255,0,0.08);
+      border: 1px solid rgba(0,255,0,0.3);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: rgba(0,255,0,0.75);
+      white-space: nowrap;
+    }
+
+    /* ================================================================
        CONFIG — INTERACTIVE ADDITIONS
        ================================================================ */
 
@@ -1094,6 +1302,12 @@
 
       .features-grid { grid-template-columns: repeat(2, 1fr); }
 
+      .arcade-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .arcade-duck-side { order: -1; }
+
       .flow-wrap {
         flex-direction: column;
         align-items: center;
@@ -1123,6 +1337,7 @@
 
       .features-grid { grid-template-columns: 1fr; }
       .config-grid   { grid-template-columns: 1fr; }
+      .games-grid    { grid-template-columns: repeat(2, 1fr); }
 
       .hero-buttons { flex-direction: column; align-items: center; }
       .btn {
@@ -1148,6 +1363,7 @@
         <li><a href="#historia">Historia</a></li>
         <li><a href="#como-usar">Cómo usar</a></li>
         <li><a href="#configuracion">Configuración</a></li>
+        <li><a href="#arcade">Arcade</a></li>
         <li><a href="#descarga" class="nav-cta">Descargar</a></li>
       </ul>
       <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú">☰</button>
@@ -1438,6 +1654,80 @@
             Lo probamos en soldadura.
           </p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ARCADE
+       ============================================================ -->
+  <section id="arcade" class="section">
+    <div class="container">
+      <div class="arcade-inner">
+
+        <!-- Izquierda: pato en pantalla arcade -->
+        <div class="arcade-duck-side reveal">
+          <div class="arcade-booth">
+            <div class="arcade-screen">
+              <p class="arcade-screen-label">▶ PLAYER 1</p>
+              <img id="arcade-duck"
+                   src="image/DebugDuck_Idle/frame_021.png"
+                   alt="DebugDuck jugando">
+              <p class="arcade-score">SCORE: <span>004200</span></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Derecha: contenido -->
+        <div class="arcade-content reveal">
+          <span class="arcade-badge">NUEVO 🕹️</span>
+
+          <h2 class="arcade-title">Cuando tu cerebro<br>necesita un respiro</h2>
+          <p class="arcade-sub">
+            El pato te avisa cuando llevas demasiado tiempo trabajando.
+            Pausa, juega un rato y vuelve con más claridad.
+          </p>
+
+          <div class="games-grid">
+            <div class="game-card">
+              <span class="game-emoji">🎯</span>
+              <span class="game-name">Flappy Duck</span>
+              <span class="game-desc">Esquiva obstáculos. Como los deadlines.</span>
+            </div>
+            <div class="game-card">
+              <span class="game-emoji">🧠</span>
+              <span class="game-name">Debug Quiz</span>
+              <span class="game-desc">¿Cuánto sabes realmente de programación?</span>
+            </div>
+            <div class="game-card">
+              <span class="game-emoji">🎨</span>
+              <span class="game-name">Pato Pixel</span>
+              <span class="game-desc">Dibuja. La IA local te puntúa sin piedad.</span>
+            </div>
+            <div class="game-card">
+              <span class="game-emoji">⚡</span>
+              <span class="game-name">Duck Typing</span>
+              <span class="game-desc">Velocidad de escritura con términos técnicos.</span>
+            </div>
+            <div class="game-card">
+              <span class="game-emoji">🔢</span>
+              <span class="game-name">Duck Math</span>
+              <span class="game-desc">Operaciones mentales contra el reloj.</span>
+            </div>
+            <div class="game-card">
+              <span class="game-emoji">❌⭕</span>
+              <span class="game-name">3 en Raya</span>
+              <span class="game-desc">Juega contra el pato. Nunca ganarás.</span>
+            </div>
+          </div>
+
+          <div class="arcade-pills">
+            <span class="arcade-pill">⏱️ Frecuencia ajustable: 15–60 min</span>
+            <span class="arcade-pill">💾 Scores guardados por sesión</span>
+            <span class="arcade-pill">🔕 Desactivable en ajustes</span>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -1825,6 +2115,29 @@
       }
     }, { threshold: 0.25 });
     ctaObs.observe(document.getElementById('descarga'));
+
+    // ── Arcade Duck (loops frames 21-35 of Idle) ──────────────────
+    const arcadeDuckEl = document.getElementById('arcade-duck');
+    if (arcadeDuckEl) {
+      const ARCADE_START = 21;
+      const ARCADE_END   = 35;
+      const ARCADE_FPS   = 10;
+      let   arcadeFrame  = ARCADE_START;
+      let   arcadeTimer  = null;
+
+      const arcadeObs = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          preload('idle', () => {
+            arcadeTimer = setInterval(() => {
+              arcadeDuckEl.src = frameSrc('idle', arcadeFrame);
+              arcadeFrame = arcadeFrame >= ARCADE_END ? ARCADE_START : arcadeFrame + 1;
+            }, 1000 / ARCADE_FPS);
+          });
+          arcadeObs.disconnect();
+        }
+      }, { threshold: 0.2 });
+      arcadeObs.observe(document.getElementById('arcade'));
+    }
 
     // ── Scroll Reveal ─────────────────────────────────────────────
 
