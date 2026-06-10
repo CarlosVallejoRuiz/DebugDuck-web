@@ -1537,6 +1537,32 @@
       margin-top: 12px;
     }
 
+    /* ── Language selector ── */
+    .lang-selector { position:relative; margin-left:8px; }
+    .lang-btn {
+      background:none; border:1px solid rgba(255,255,255,0.2); border-radius:4px;
+      color:rgba(255,255,255,0.8); font-family:'Space Mono',monospace;
+      font-size:0.72rem; font-weight:700; letter-spacing:.05em;
+      padding:5px 10px; cursor:pointer; display:flex; align-items:center;
+      gap:5px; transition:all .15s; white-space:nowrap;
+    }
+    .lang-btn:hover { border-color:rgba(255,255,255,0.5); color:#fff; }
+    .lang-dropdown {
+      position:absolute; top:calc(100% + 8px); right:0;
+      background:#1a1a1a; border:1px solid rgba(255,255,255,0.12);
+      border-radius:6px; list-style:none; padding:4px 0;
+      min-width:148px; z-index:200; display:none;
+      box-shadow:0 8px 24px rgba(0,0,0,0.4);
+    }
+    .lang-dropdown.open { display:block; }
+    .lang-dropdown li {
+      padding:8px 14px; cursor:pointer; display:flex; align-items:center;
+      gap:8px; font-family:'Space Mono',monospace; font-size:0.72rem;
+      color:rgba(255,255,255,0.72); transition:background .1s; user-select:none;
+    }
+    .lang-dropdown li:hover { background:rgba(255,255,255,0.08); color:#fff; }
+    .lang-check { margin-left:auto; color:var(--yellow); font-size:0.75rem; }
+
     /* ================================================================
        RESPONSIVE
        ================================================================ */
@@ -1620,6 +1646,18 @@
         <li><a href="#configuracion">Configuración</a></li>
         <li><a href="#descarga" class="nav-cta">Descargar</a></li>
       </ul>
+      <div class="lang-selector" id="lang-selector">
+        <button class="lang-btn" id="lang-btn">
+          <span id="lang-flag">🇪🇸</span><span id="lang-code">ES</span><span style="font-size:.6rem;opacity:.6;">▾</span>
+        </button>
+        <ul class="lang-dropdown" id="lang-dropdown">
+          <li data-lang="es"><span>🇪🇸</span> Español   <span class="lang-check" id="lc-es">✓</span></li>
+          <li data-lang="en"><span>🇬🇧</span> English   <span class="lang-check" id="lc-en"></span></li>
+          <li data-lang="fr"><span>🇫🇷</span> Français  <span class="lang-check" id="lc-fr"></span></li>
+          <li data-lang="de"><span>🇩🇪</span> Deutsch   <span class="lang-check" id="lc-de"></span></li>
+          <li data-lang="pt"><span>🇧🇷</span> Português <span class="lang-check" id="lc-pt"></span></li>
+        </ul>
+      </div>
       <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú">☰</button>
     </div>
   </nav>
@@ -2751,6 +2789,467 @@
     }, { threshold: 0.1, rootMargin: '0px 0px -32px 0px' });
 
     reveals.forEach(el => revealObs.observe(el));
+
+    // ── i18n System ───────────────────────────────────────────────
+    const TRANSLATIONS = {
+      es: {
+        nav_inicio:'Inicio', nav_historia:'Historia', nav_como_usar:'Cómo usar', nav_arcade:'Arcade', nav_config:'Configuración', nav_descargar:'Descargar',
+        hero_sub:'El pato de goma que te escucha, te juzga (un poco) y te ayuda a pensar mejor.',
+        hero_download:'Descargar DebugDuck', hero_github:'Ver en GitHub →',
+        hero_badge:'Open Source  ·  Gratuito  ·  100% Local',
+        hist_tag:'La historia', hist_title:'De dónde viene este pato',
+        hist_p1:'Todo empezó cuando vi a mi pareja usando GPT-4 para preguntas del día a día. No era culpa suya — nadie te explica que existe una alternativa gratuita, local y privada para el 80% de las consultas. Los tokens premium son finitos, deberían reservarse para lo que realmente los necesita.',
+        hist_spark:'La chispa real vino de un curso de soldadura. Sí, soldadura.',
+        hist_p2:'Le expliqué a mis compañeros el método del rubber duck debugging — hablarle a un objeto inanimado para ordenar tus ideas. Lo adoptaron para todo: sus proyectos, sus decisiones, su vida.',
+        hist_p3a:'Eso confirmó algo que ya sospechaba: ', hist_p3b:'explicar tus problemas en voz alta funciona para todo el mundo', hist_p3c:', no solo para programadores.',
+        hist_p4:'DebugDuck nació de esas dos ideas.',
+        cf_tag:'Cómo funciona', cf_title:'Tres pasos y el pato está listo', cf_sub:'Sin configuración complicada. Sin curva de aprendizaje. Solo habla.',
+        cf_s1:'Habla con el pato', cf_s1d:'Doble clic en el pato y el micrófono se activa. Cuéntale tu problema, tu duda o lo que sea. Sin filtros.',
+        cf_s2:'El pato piensa',   cf_s2d:'Con IA local en tu ordenador, sin internet, sin enviar tus datos a ningún lado. Todo se queda contigo.',
+        cf_s3:'El pato responde', cf_s3d:'Con personalidad. Puede ser mentor paciente o brutalmente directo. Tú eliges cómo quieres que te hable.',
+        cu_tag:'Flujo de uso', cu_title:'Cinco pasos, un pato', cu_sub:'Así funciona una sesión típica con DebugDuck.',
+        cu_s1:'Doble clic', cu_s1d:'Abre DebugDuck y haz doble clic en el pato para activarlo.',
+        cu_s2:'Habla',          cu_s2d:'Explica tu problema, duda o bloqueo. En voz alta, sin filtros.',
+        cu_s3:'El pato piensa', cu_s3d:'La IA local procesa tu mensaje. Cero internet, cero datos enviados.',
+        cu_s4:'Responde',       cu_s4d:'El pato te devuelve una respuesta con su personalidad elegida.',
+        cu_s5:'¡Eureka!',       cu_s5d:'Cuando lo entiendas, pulsa Eureka. Confeti y pato contento.',
+        feat_tag:'Características', feat_title:'No es un chatbot más, ES TU PATO!!.', feat_sub:'Cada detalle está pensado para que la experiencia se sienta viva, no robótica.',
+        feat1:'Modo Tamagotchi',          feat1d:'Cuida al pato o se pone de mal humor. Su estado de ánimo afecta cómo te responde. No lo abandones.',
+        feat2:'Personalidad ajustable',   feat2d:'Slider de mentor paciente a sin piedad. Perfecto para principiantes o para seniors que quieren honestidad brutal.',
+        feat3:'Memoria de conversación',  feat3d:'Recuerda el contexto de la sesión para respuestas más coherentes y útiles. El pato no olvida (en la sesión).',
+        feat4:'Confeti al Eureka',        feat4d:'Cuando tengas un momento de claridad, pulsa Eureka y celebra como mereces. Los logros merecen confeti.',
+        feat5:'100% privado y local',     feat5d:'Corre en tu ordenador con LM Studio. Sin APIs, sin suscripciones, sin espías. Lo tuyo es tuyo.',
+        feat6:'Para todo el mundo',       feat6d:'¿Programador? Perfecto. ¿No programador? También. El rubber duck es universal. Lo probamos en soldadura.',
+        arc_badge:'12 MINIJUEGOS 🕹️', arc_title:'Cuando tu cerebro<br>necesita un respiro',
+        arc_sub:'El pato te avisa cuando llevas demasiado tiempo trabajando. Los juegos se adaptan a tu modo: programador o general.',
+        arc_mode_dev:'🦆 MODO PROGRAMADOR', arc_mode_gen:'🌍 MODO GENERAL',
+        arc_dev:['Preguntas de JS, Python, Git','Palabras técnicas en Wordle','Bugs de código en Bug Hunt','Términos tech en Typing'],
+        arc_gen:['Preguntas de cultura general','Palabras cotidianas en Wordle','Errores lógicos en Bug Hunt','Vocabulario general en Typing'],
+        arc_pills:['⏱️ Frecuencia: 15 a 60 minutos','💾 Records guardados por juego','🔕 Desactivable en ajustes','🎭 Se adapta a tu modo de trabajo'],
+        cfg_tag:'Configuración', cfg_title:'Hazlo tuyo', cfg_sub:'Cuatro ajustes que cambian completamente cómo el pato te habla.',
+        cfg_c1:'🎭 Personalidad', cfg_tab_dev:'🦆 Programador', cfg_tab_gen:'🌍 General',
+        cfg_dev:['Referencias técnicas y jerga dev','Ejemplos de código en respuestas','Detecta bugs y analiza tu código','Modo debug socrático (no da la solución directa)'],
+        cfg_gen:['Sin tecnicismos, lenguaje cotidiano','Para cualquier tema: vida, decisiones, ideas','Analogías del mundo real','Perfecto si no eres programador'],
+        cfg_c2:'🎚️ Nivel de sarcasmo', cfg_sl:'🎓 Mentor', cfg_sr:'😈 Sin piedad',
+        cfg_c3:'🥚 Modo Tamagotchi', cfg_energy:'Energía del pato',
+        cfg_moods:['Feliz — respuestas cálidas y motivadoras','Neutro — respuestas directas y concisas','Molesto — más sarcástico de lo normal','Dormido — necesita atención urgente'],
+        cfg_tama_on:'El estado de ánimo del pato determina automáticamente su nivel de sarcasmo. Cuídalo con Eurekas y Pomodoros.',
+        cfg_tama_off:'Modo manual activado — Tú controlas exactamente cómo de directo quieres que sea el pato con el slider de arriba.',
+        cfg_c4:'🧠 Memoria de conversación',
+        cfg_mem_on:'🧠 El pato recuerda el contexto de la sesión. Respuestas más coherentes en conversaciones largas. La memoria se comprime automáticamente.',
+        cfg_mem_off:'Cada pregunta es independiente. Más rápido, sin contexto previo.',
+        cfg_mem_note:'⚠️ La memoria NO se guarda entre sesiones.',
+        cfg_c5:'🎮 Minijuegos',
+        cfg_mini_on:'El pato te avisa cuando llevas demasiado tiempo trabajando.',
+        cfg_mini_adapt:'Los juegos se adaptan automáticamente a tu modo: programador o general.',
+        cfg_mini_timer:'⏱️ Próximo juego en:',
+        cfg_mini_off:['Modo descanso desactivado.','Puedes acceder a los juegos manualmente desde el botón 🎮 del widget cuando quieras.','El pato no interrumpirá tu flujo de trabajo.'],
+        lbl_tama_on:'Activo', lbl_tama_off:'Manual', lbl_mem_on:'Activa', lbl_mem_off:'Desactivada', lbl_mini_on:'Activo', lbl_mini_off:'Desactivado',
+        req_tag:'Requisitos', req_title:'¿Qué necesitas para usarlo?', req_sub:'Solo tres cosas. Nada raro.',
+        req_items:['Mac con Apple Silicon (M1 · M2 · M3 · M4)','Windows 10 / 11 (x64)','LM Studio instalado y con servidor activo','Micrófono funcional'],
+        req_link:'Cómo configurar LM Studio →',
+        cta_title:'¿Listo para hablar con el pato?', cta_sub:'Gratis. Open source. Sin trampa.',
+        cta_download:'Descargar DebugDuck', cta_github:'Ver código fuente en GitHub →', cta_version:'v0.1.1 — Mac (aarch64) · Windows (x64)',
+        footer_made:'Hecho con 🦆 por Carlos Vallejo', footer_lic:'Open source bajo licencia MIT',
+      },
+      en: {
+        nav_inicio:'Home', nav_historia:'Story', nav_como_usar:'How to use', nav_arcade:'Arcade', nav_config:'Settings', nav_descargar:'Download',
+        hero_sub:'The rubber duck that listens, judges (a little) and helps you think clearer.',
+        hero_download:'Download DebugDuck', hero_github:'View on GitHub →',
+        hero_badge:'Open Source  ·  Free  ·  100% Local',
+        hist_tag:'The story', hist_title:'Where this duck comes from',
+        hist_p1:'It started when I saw my partner using GPT-4 for everyday questions. It wasn\'t her fault — nobody tells you there\'s a free, local, private alternative for 80% of your queries. Premium tokens are finite; they should be saved for what truly needs them.',
+        hist_spark:'The real spark came from a welding course. Yes, welding.',
+        hist_p2:'I explained rubber duck debugging to my classmates — talking to an inanimate object to organize your thoughts. They adopted it for everything: projects, decisions, life.',
+        hist_p3a:'That confirmed something I already suspected: ', hist_p3b:'explaining your problems out loud works for everyone', hist_p3c:', not just developers.',
+        hist_p4:'DebugDuck was born from those two ideas.',
+        cf_tag:'How it works', cf_title:'Three steps and the duck is ready', cf_sub:'No complex setup. No learning curve. Just talk.',
+        cf_s1:'Talk to the duck',  cf_s1d:'Double-click the duck and the mic activates. Tell it your problem, question or anything. No filter.',
+        cf_s2:'The duck thinks',   cf_s2d:'With local AI on your computer, no internet, no data sent anywhere. Everything stays with you.',
+        cf_s3:'The duck replies',  cf_s3d:'With personality. Patient mentor or brutally direct — you choose how it talks to you.',
+        cu_tag:'Usage flow', cu_title:'Five steps, one duck', cu_sub:'This is how a typical DebugDuck session works.',
+        cu_s1:'Double click', cu_s1d:'Open DebugDuck and double-click the duck to activate it.',
+        cu_s2:'Talk',          cu_s2d:'Explain your problem, doubt or blocker. Out loud, no filter.',
+        cu_s3:'The duck thinks', cu_s3d:'The local AI processes your message. Zero internet, zero data sent.',
+        cu_s4:'It replies',    cu_s4d:'The duck returns an answer with its chosen personality.',
+        cu_s5:'Eureka!',       cu_s5d:'When you get it, press Eureka. Confetti and a happy duck.',
+        feat_tag:'Features', feat_title:'Not just another chatbot — IT\'S YOUR DUCK!!', feat_sub:'Every detail is designed so the experience feels alive, not robotic.',
+        feat1:'Tamagotchi Mode',          feat1d:'Neglect the duck and it gets moody. Its mood affects how it responds. Don\'t leave it alone.',
+        feat2:'Adjustable personality',   feat2d:'Slider from patient mentor to no mercy. Perfect for beginners or seniors who want brutal honesty.',
+        feat3:'Conversation memory',      feat3d:'Remembers session context for more coherent, useful answers. The duck doesn\'t forget (within the session).',
+        feat4:'Eureka confetti',          feat4d:'When you have a moment of clarity, press Eureka and celebrate as you deserve. Achievements deserve confetti.',
+        feat5:'100% private & local',     feat5d:'Runs on your computer with LM Studio. No APIs, no subscriptions, no snooping. What\'s yours stays yours.',
+        feat6:'For everyone',             feat6d:'Developer? Perfect. Not a developer? Also perfect. Rubber duck debugging is universal. We tested it in welding.',
+        arc_badge:'12 MINI-GAMES 🕹️', arc_title:'When your brain<br>needs a break',
+        arc_sub:'The duck alerts you when you\'ve been working too long. Games adapt to your mode: developer or general.',
+        arc_mode_dev:'🦆 DEV MODE', arc_mode_gen:'🌍 GENERAL MODE',
+        arc_dev:['JS, Python, Git questions','Technical words in Wordle','Code bugs in Bug Hunt','Tech terms in Typing'],
+        arc_gen:['General knowledge questions','Everyday words in Wordle','Logic errors in Bug Hunt','General vocabulary in Typing'],
+        arc_pills:['⏱️ Frequency: 15 to 60 minutes','💾 Records saved per game','🔕 Can be disabled in settings','🎭 Adapts to your work mode'],
+        cfg_tag:'Settings', cfg_title:'Make it yours', cfg_sub:'Four settings that completely change how the duck talks to you.',
+        cfg_c1:'🎭 Personality', cfg_tab_dev:'🦆 Developer', cfg_tab_gen:'🌍 General',
+        cfg_dev:['Technical references and dev jargon','Code examples in responses','Detects bugs and analyses your code','Socratic debug mode (doesn\'t give the answer directly)'],
+        cfg_gen:['No jargon, everyday language','Any topic: life, decisions, ideas','Real-world analogies','Perfect if you\'re not a developer'],
+        cfg_c2:'🎚️ Sarcasm level', cfg_sl:'🎓 Mentor', cfg_sr:'😈 No mercy',
+        cfg_c3:'🥚 Tamagotchi mode', cfg_energy:'Duck energy',
+        cfg_moods:['Happy — warm and motivating responses','Neutral — direct and concise responses','Annoyed — more sarcastic than usual','Asleep — needs urgent attention'],
+        cfg_tama_on:'The duck\'s mood automatically sets its sarcasm level. Keep it happy with Eurekas and Pomodoros.',
+        cfg_tama_off:'Manual mode — you control exactly how direct the duck is with the slider above.',
+        cfg_c4:'🧠 Conversation memory',
+        cfg_mem_on:'🧠 The duck remembers session context. More coherent answers in long conversations. Memory is compressed automatically.',
+        cfg_mem_off:'Each question is independent. Faster, without prior context.',
+        cfg_mem_note:'⚠️ Memory is NOT saved between sessions.',
+        cfg_c5:'🎮 Mini-games',
+        cfg_mini_on:'The duck alerts you when you\'ve been working too long.',
+        cfg_mini_adapt:'Games adapt automatically to your mode: developer or general.',
+        cfg_mini_timer:'⏱️ Next game in:',
+        cfg_mini_off:['Break mode disabled.','You can access the games manually via the 🎮 button in the widget whenever you want.','The duck won\'t interrupt your workflow.'],
+        lbl_tama_on:'Active', lbl_tama_off:'Manual', lbl_mem_on:'Active', lbl_mem_off:'Disabled', lbl_mini_on:'Active', lbl_mini_off:'Disabled',
+        req_tag:'Requirements', req_title:'What do you need to use it?', req_sub:'Just three things. Nothing weird.',
+        req_items:['Mac with Apple Silicon (M1 · M2 · M3 · M4)','Windows 10 / 11 (x64)','LM Studio installed and running','Working microphone'],
+        req_link:'How to set up LM Studio →',
+        cta_title:'Ready to talk to the duck?', cta_sub:'Free. Open source. No tricks.',
+        cta_download:'Download DebugDuck', cta_github:'View source on GitHub →', cta_version:'v0.1.1 — Mac (aarch64) · Windows (x64)',
+        footer_made:'Made with 🦆 by Carlos Vallejo', footer_lic:'Open source under MIT license',
+      },
+      fr: {
+        nav_inicio:'Accueil', nav_historia:'Histoire', nav_como_usar:'Utilisation', nav_arcade:'Arcade', nav_config:'Paramètres', nav_descargar:'Télécharger',
+        hero_sub:'Le canard en caoutchouc qui t\'écoute, te juge (un peu) et t\'aide à mieux réfléchir.',
+        hero_download:'Télécharger DebugDuck', hero_github:'Voir sur GitHub →',
+        hero_badge:'Open Source  ·  Gratuit  ·  100% Local',
+        hist_tag:'L\'histoire', hist_title:'D\'où vient ce canard',
+        hist_p1:'Tout a commencé quand j\'ai vu ma partenaire utiliser GPT-4 pour des questions du quotidien. Ce n\'était pas sa faute — personne ne t\'explique qu\'il existe une alternative gratuite, locale et privée pour 80% des requêtes. Les tokens premium sont limités ; ils devraient être réservés à ce qui en a vraiment besoin.',
+        hist_spark:'L\'étincelle est venue d\'un cours de soudure. Oui, de la soudure.',
+        hist_p2:'J\'ai expliqué à mes camarades la technique du rubber duck debugging — parler à un objet inanimé pour organiser ses idées. Ils l\'ont adopté pour tout : projets, décisions, vie quotidienne.',
+        hist_p3a:'Cela a confirmé quelque chose que je suspectais déjà : ', hist_p3b:'expliquer ses problèmes à voix haute fonctionne pour tout le monde', hist_p3c:', pas seulement pour les développeurs.',
+        hist_p4:'DebugDuck est né de ces deux idées.',
+        cf_tag:'Comment ça marche', cf_title:'Trois étapes et le canard est prêt', cf_sub:'Pas de configuration complexe. Pas de courbe d\'apprentissage. Parle simplement.',
+        cf_s1:'Parle au canard',      cf_s1d:'Double-clic sur le canard et le micro s\'active. Raconte ton problème, ta question ou autre chose. Sans filtre.',
+        cf_s2:'Le canard réfléchit', cf_s2d:'Avec une IA locale sur ton ordinateur, sans internet, sans envoyer tes données nulle part. Tout reste chez toi.',
+        cf_s3:'Le canard répond',    cf_s3d:'Avec de la personnalité. Mentor patient ou directement brutal — tu choisis comment il te parle.',
+        cu_tag:'Flux d\'utilisation', cu_title:'Cinq étapes, un canard', cu_sub:'Voici comment se déroule une session typique avec DebugDuck.',
+        cu_s1:'Double-clic', cu_s1d:'Ouvre DebugDuck et double-clique sur le canard pour l\'activer.',
+        cu_s2:'Parle',              cu_s2d:'Explique ton problème, doute ou blocage. À voix haute, sans filtre.',
+        cu_s3:'Le canard réfléchit', cu_s3d:'L\'IA locale traite ton message. Zéro internet, zéro données envoyées.',
+        cu_s4:'Il répond',          cu_s4d:'Le canard te retourne une réponse avec sa personnalité choisie.',
+        cu_s5:'Eurêka !',           cu_s5d:'Quand tu comprends, appuie sur Eurêka. Confettis et canard content.',
+        feat_tag:'Fonctionnalités', feat_title:'Ce n\'est pas juste un chatbot — C\'EST TON CANARD !!', feat_sub:'Chaque détail est pensé pour que l\'expérience soit vivante, pas robotique.',
+        feat1:'Mode Tamagotchi',          feat1d:'Néglige le canard et il devient grincheux. Son humeur affecte ses réponses. Ne l\'abandonne pas.',
+        feat2:'Personnalité réglable',    feat2d:'Curseur de mentor patient à sans pitié. Parfait pour les débutants ou les seniors qui veulent une honnêteté brutale.',
+        feat3:'Mémoire de conversation', feat3d:'Se souvient du contexte de la session pour des réponses plus cohérentes. Le canard n\'oublie pas (dans la session).',
+        feat4:'Confettis à l\'Eurêka',   feat4d:'À chaque moment de clarté, appuie sur Eurêka et célèbre comme tu le mérites. Les succès méritent des confettis.',
+        feat5:'100% privé et local',     feat5d:'Tourne sur ton ordinateur avec LM Studio. Sans APIs, sans abonnements, sans espions. Ce qui est à toi reste à toi.',
+        feat6:'Pour tout le monde',      feat6d:'Développeur ? Parfait. Pas développeur ? Aussi. Le rubber duck debugging est universel. On l\'a testé en soudure.',
+        arc_badge:'12 MINI-JEUX 🕹️', arc_title:'Quand ton cerveau<br>a besoin d\'une pause',
+        arc_sub:'Le canard t\'avertit quand tu travailles trop longtemps. Les jeux s\'adaptent à ton mode : développeur ou général.',
+        arc_mode_dev:'🦆 MODE DEV', arc_mode_gen:'🌍 MODE GÉNÉRAL',
+        arc_dev:['Questions JS, Python, Git','Mots techniques au Wordle','Bugs de code au Bug Hunt','Termes tech au Typing'],
+        arc_gen:['Questions de culture générale','Mots du quotidien au Wordle','Erreurs logiques au Bug Hunt','Vocabulaire général au Typing'],
+        arc_pills:['⏱️ Fréquence : 15 à 60 minutes','💾 Records sauvegardés par jeu','🔕 Désactivable dans les paramètres','🎭 S\'adapte à ton mode de travail'],
+        cfg_tag:'Paramètres', cfg_title:'Personnalise-le', cfg_sub:'Quatre réglages qui changent complètement la façon dont le canard te parle.',
+        cfg_c1:'🎭 Personnalité', cfg_tab_dev:'🦆 Développeur', cfg_tab_gen:'🌍 Général',
+        cfg_dev:['Références techniques et jargon dev','Exemples de code dans les réponses','Détecte les bugs et analyse ton code','Mode debug socratique (ne donne pas la solution directement)'],
+        cfg_gen:['Pas de jargon, langage quotidien','Pour n\'importe quel sujet : vie, décisions, idées','Analogies du monde réel','Parfait si tu n\'es pas développeur'],
+        cfg_c2:'🎚️ Niveau de sarcasme', cfg_sl:'🎓 Mentor', cfg_sr:'😈 Sans pitié',
+        cfg_c3:'🥚 Mode Tamagotchi', cfg_energy:'Énergie du canard',
+        cfg_moods:['Content — réponses chaleureuses et motivantes','Neutre — réponses directes et concises','Énervé — plus sarcastique que d\'habitude','Endormi — attention urgente requise'],
+        cfg_tama_on:'L\'humeur du canard détermine automatiquement son niveau de sarcasme. Prends-en soin avec des Eurêkas et des Pomodoros.',
+        cfg_tama_off:'Mode manuel activé — tu contrôles exactement le niveau de franchise du canard avec le curseur ci-dessus.',
+        cfg_c4:'🧠 Mémoire de conversation',
+        cfg_mem_on:'🧠 Le canard se souvient du contexte de la session. Réponses plus cohérentes dans les longues conversations. La mémoire est compressée automatiquement.',
+        cfg_mem_off:'Chaque question est indépendante. Plus rapide, sans contexte préalable.',
+        cfg_mem_note:'⚠️ La mémoire n\'est PAS sauvegardée entre les sessions.',
+        cfg_c5:'🎮 Mini-jeux',
+        cfg_mini_on:'Le canard t\'avertit quand tu travailles trop longtemps.',
+        cfg_mini_adapt:'Les jeux s\'adaptent automatiquement à ton mode : développeur ou général.',
+        cfg_mini_timer:'⏱️ Prochain jeu dans :',
+        cfg_mini_off:['Mode pause désactivé.','Tu peux accéder aux jeux manuellement via le bouton 🎮 du widget quand tu veux.','Le canard n\'interrompra pas ton flux de travail.'],
+        lbl_tama_on:'Actif', lbl_tama_off:'Manuel', lbl_mem_on:'Activée', lbl_mem_off:'Désactivée', lbl_mini_on:'Actif', lbl_mini_off:'Désactivé',
+        req_tag:'Prérequis', req_title:'De quoi as-tu besoin ?', req_sub:'Seulement trois choses. Rien de compliqué.',
+        req_items:['Mac avec Apple Silicon (M1 · M2 · M3 · M4)','Windows 10 / 11 (x64)','LM Studio installé et serveur actif','Microphone fonctionnel'],
+        req_link:'Comment configurer LM Studio →',
+        cta_title:'Prêt à parler au canard ?', cta_sub:'Gratuit. Open source. Sans piège.',
+        cta_download:'Télécharger DebugDuck', cta_github:'Voir le code source sur GitHub →', cta_version:'v0.1.1 — Mac (aarch64) · Windows (x64)',
+        footer_made:'Fait avec 🦆 par Carlos Vallejo', footer_lic:'Open source sous licence MIT',
+      },
+      de: {
+        nav_inicio:'Start', nav_historia:'Geschichte', nav_como_usar:'Verwendung', nav_arcade:'Arcade', nav_config:'Einstellungen', nav_descargar:'Herunterladen',
+        hero_sub:'Die Gummiente, die zuhört, urteilt (ein wenig) und hilft, klarer zu denken.',
+        hero_download:'DebugDuck herunterladen', hero_github:'Auf GitHub ansehen →',
+        hero_badge:'Open Source  ·  Kostenlos  ·  100% Lokal',
+        hist_tag:'Die Geschichte', hist_title:'Woher diese Ente kommt',
+        hist_p1:'Es begann, als ich meine Partnerin dabei beobachtete, GPT-4 für alltägliche Fragen zu nutzen. Es war nicht ihre Schuld — niemand erklärt dir, dass es für 80% der Anfragen eine kostenlose, lokale und private Alternative gibt. Premium-Token sind endlich; sie sollten für das reserviert werden, was sie wirklich braucht.',
+        hist_spark:'Der eigentliche Funke kam von einem Schweißkurs. Ja, Schweißen.',
+        hist_p2:'Ich erklärte meinen Mitschülern die Rubber-Duck-Debugging-Methode — mit einem leblosen Objekt sprechen, um die Gedanken zu ordnen. Sie übernahmen es für alles: Projekte, Entscheidungen, das Leben.',
+        hist_p3a:'Das bestätigte etwas, das ich bereits ahnte: ', hist_p3b:'Probleme laut zu erklären funktioniert für jeden', hist_p3c:', nicht nur für Entwickler.',
+        hist_p4:'DebugDuck entstand aus diesen beiden Ideen.',
+        cf_tag:'Wie es funktioniert', cf_title:'Drei Schritte und die Ente ist bereit', cf_sub:'Keine komplizierte Einrichtung. Keine Lernkurve. Einfach sprechen.',
+        cf_s1:'Mit der Ente sprechen', cf_s1d:'Doppelklick auf die Ente und das Mikrofon aktiviert sich. Erkläre dein Problem, deine Frage oder was auch immer. Ungefiltert.',
+        cf_s2:'Die Ente denkt nach',  cf_s2d:'Mit lokaler KI auf deinem Computer, ohne Internet, ohne Daten irgendwohin zu senden. Alles bleibt bei dir.',
+        cf_s3:'Die Ente antwortet',   cf_s3d:'Mit Persönlichkeit. Geduldiger Mentor oder brutal direkt — du wählst, wie sie mit dir spricht.',
+        cu_tag:'Arbeitsablauf', cu_title:'Fünf Schritte, eine Ente', cu_sub:'So läuft eine typische DebugDuck-Sitzung ab.',
+        cu_s1:'Doppelklick', cu_s1d:'Öffne DebugDuck und doppelklicke auf die Ente, um sie zu aktivieren.',
+        cu_s2:'Spreche',              cu_s2d:'Erkläre dein Problem, deinen Zweifel oder deine Blockade. Laut, ungefiltert.',
+        cu_s3:'Die Ente denkt nach',  cu_s3d:'Die lokale KI verarbeitet deine Nachricht. Kein Internet, keine gesendeten Daten.',
+        cu_s4:'Antwort',              cu_s4d:'Die Ente gibt eine Antwort mit ihrer gewählten Persönlichkeit.',
+        cu_s5:'Heureka!',             cu_s5d:'Wenn du es verstehst, drücke Heureka. Konfetti und glückliche Ente.',
+        feat_tag:'Funktionen', feat_title:'Nicht nur ein weiterer Chatbot — ES IST DEINE ENTE!!', feat_sub:'Jedes Detail ist darauf ausgelegt, dass sich das Erlebnis lebendig anfühlt, nicht roboterhaft.',
+        feat1:'Tamagotchi-Modus',        feat1d:'Vernachlässige die Ente und sie wird schlecht gelaunt. Ihre Stimmung beeinflusst ihre Antworten. Lass sie nicht allein.',
+        feat2:'Anpassbare Persönlichkeit', feat2d:'Schieberegler von geduldigem Mentor bis zu gnadenlos. Perfekt für Anfänger oder Profis, die brutale Ehrlichkeit wollen.',
+        feat3:'Gesprächsgedächtnis',     feat3d:'Merkt sich den Sitzungskontext für kohärentere, nützlichere Antworten. Die Ente vergisst nicht (in der Sitzung).',
+        feat4:'Heureka-Konfetti',        feat4d:'Bei einem Klarheitsmoment drücke Heureka und feiere wie du es verdienst. Leistungen verdienen Konfetti.',
+        feat5:'100% privat & lokal',     feat5d:'Läuft auf deinem Computer mit LM Studio. Keine APIs, keine Abonnements, keine Spione. Was deins ist, bleibt deins.',
+        feat6:'Für alle',                feat6d:'Entwickler? Perfekt. Kein Entwickler? Auch. Rubber-Duck-Debugging ist universell. Wir haben es beim Schweißen getestet.',
+        arc_badge:'12 MINISPIELE 🕹️', arc_title:'Wenn dein Gehirn<br>eine Pause braucht',
+        arc_sub:'Die Ente warnt dich, wenn du zu lange arbeitest. Die Spiele passen sich deinem Modus an: Entwickler oder Allgemein.',
+        arc_mode_dev:'🦆 ENTWICKLER-MODUS', arc_mode_gen:'🌍 ALLGEMEINER MODUS',
+        arc_dev:['JS-, Python-, Git-Fragen','Technische Wörter im Wordle','Code-Bugs im Bug Hunt','Tech-Begriffe im Typing'],
+        arc_gen:['Allgemeinwissen-Fragen','Alltagswörter im Wordle','Logikfehler im Bug Hunt','Allgemeiner Wortschatz im Typing'],
+        arc_pills:['⏱️ Häufigkeit: 15 bis 60 Minuten','💾 Rekorde pro Spiel gespeichert','🔕 In Einstellungen deaktivierbar','🎭 Passt sich deiner Arbeitsweise an'],
+        cfg_tag:'Einstellungen', cfg_title:'Mach es zu deinem', cfg_sub:'Vier Einstellungen, die völlig verändern, wie die Ente mit dir spricht.',
+        cfg_c1:'🎭 Persönlichkeit', cfg_tab_dev:'🦆 Entwickler', cfg_tab_gen:'🌍 Allgemein',
+        cfg_dev:['Technische Referenzen und Dev-Jargon','Code-Beispiele in Antworten','Erkennt Bugs und analysiert deinen Code','Sokratischer Debug-Modus (gibt Lösung nicht direkt)'],
+        cfg_gen:['Kein Fachjargon, Alltagssprache','Für jedes Thema: Leben, Entscheidungen, Ideen','Analogien aus der realen Welt','Perfekt wenn du kein Entwickler bist'],
+        cfg_c2:'🎚️ Sarkasmusstufe', cfg_sl:'🎓 Mentor', cfg_sr:'😈 Gnadenlos',
+        cfg_c3:'🥚 Tamagotchi-Modus', cfg_energy:'Energie der Ente',
+        cfg_moods:['Glücklich — warme und motivierende Antworten','Neutral — direkte und prägnante Antworten','Verärgert — sarkastischer als gewöhnlich','Schläfrig — braucht dringend Aufmerksamkeit'],
+        cfg_tama_on:'Die Stimmung der Ente bestimmt automatisch ihren Sarkasmuslevel. Pflege sie mit Heurekas und Pomodoros.',
+        cfg_tama_off:'Manueller Modus — du kontrollierst mit dem Schieberegler oben, wie direkt die Ente ist.',
+        cfg_c4:'🧠 Gesprächsgedächtnis',
+        cfg_mem_on:'🧠 Die Ente merkt sich den Sitzungskontext. Kohärentere Antworten bei langen Gesprächen. Der Speicher wird automatisch komprimiert.',
+        cfg_mem_off:'Jede Frage ist unabhängig. Schneller, ohne vorherigen Kontext.',
+        cfg_mem_note:'⚠️ Gedächtnis wird NICHT zwischen Sitzungen gespeichert.',
+        cfg_c5:'🎮 Minispiele',
+        cfg_mini_on:'Die Ente warnt dich, wenn du zu lange arbeitest.',
+        cfg_mini_adapt:'Spiele passen sich automatisch deinem Modus an: Entwickler oder Allgemein.',
+        cfg_mini_timer:'⏱️ Nächstes Spiel in:',
+        cfg_mini_off:['Pausenmodus deaktiviert.','Du kannst jederzeit manuell über den 🎮-Button im Widget auf die Spiele zugreifen.','Die Ente wird deinen Arbeitsfluss nicht unterbrechen.'],
+        lbl_tama_on:'Aktiv', lbl_tama_off:'Manuell', lbl_mem_on:'Aktiv', lbl_mem_off:'Deaktiviert', lbl_mini_on:'Aktiv', lbl_mini_off:'Deaktiviert',
+        req_tag:'Voraussetzungen', req_title:'Was brauchst du zur Nutzung?', req_sub:'Nur drei Dinge. Nichts Kompliziertes.',
+        req_items:['Mac mit Apple Silicon (M1 · M2 · M3 · M4)','Windows 10 / 11 (x64)','LM Studio installiert und Server aktiv','Funktionierendes Mikrofon'],
+        req_link:'LM Studio einrichten →',
+        cta_title:'Bereit, mit der Ente zu sprechen?', cta_sub:'Kostenlos. Open source. Kein Trick.',
+        cta_download:'DebugDuck herunterladen', cta_github:'Quellcode auf GitHub ansehen →', cta_version:'v0.1.1 — Mac (aarch64) · Windows (x64)',
+        footer_made:'Gemacht mit 🦆 von Carlos Vallejo', footer_lic:'Open source unter MIT-Lizenz',
+      },
+      pt: {
+        nav_inicio:'Início', nav_historia:'História', nav_como_usar:'Como usar', nav_arcade:'Arcade', nav_config:'Configurações', nav_descargar:'Baixar',
+        hero_sub:'O pato de borracha que te ouve, te julga (um pouco) e te ajuda a pensar melhor.',
+        hero_download:'Baixar DebugDuck', hero_github:'Ver no GitHub →',
+        hero_badge:'Open Source  ·  Gratuito  ·  100% Local',
+        hist_tag:'A história', hist_title:'De onde vem este pato',
+        hist_p1:'Tudo começou quando vi minha parceira usando GPT-4 para perguntas do dia a dia. Não era culpa dela — ninguém te explica que existe uma alternativa gratuita, local e privada para 80% das consultas. Os tokens premium são finitos; devem ser reservados para o que realmente precisa deles.',
+        hist_spark:'A faísca real veio de um curso de soldagem. Sim, soldagem.',
+        hist_p2:'Expliquei aos meus colegas o método do rubber duck debugging — falar com um objeto inanimado para organizar os pensamentos. Eles adotaram para tudo: projetos, decisões, vida.',
+        hist_p3a:'Isso confirmou algo que eu já suspeitava: ', hist_p3b:'explicar seus problemas em voz alta funciona para todos', hist_p3c:', não apenas para desenvolvedores.',
+        hist_p4:'O DebugDuck nasceu dessas duas ideias.',
+        cf_tag:'Como funciona', cf_title:'Três passos e o pato está pronto', cf_sub:'Sem configuração complicada. Sem curva de aprendizado. Só fale.',
+        cf_s1:'Fale com o pato',  cf_s1d:'Clique duas vezes no pato e o microfone se ativa. Conte seu problema, dúvida ou o que for. Sem filtros.',
+        cf_s2:'O pato pensa',     cf_s2d:'Com IA local no seu computador, sem internet, sem enviar seus dados para lugar nenhum. Tudo fica com você.',
+        cf_s3:'O pato responde',  cf_s3d:'Com personalidade. Pode ser mentor paciente ou brutalmente direto. Você escolhe como quer que ele fale com você.',
+        cu_tag:'Fluxo de uso', cu_title:'Cinco passos, um pato', cu_sub:'Veja como funciona uma sessão típica com o DebugDuck.',
+        cu_s1:'Clique duplo', cu_s1d:'Abra o DebugDuck e clique duas vezes no pato para ativá-lo.',
+        cu_s2:'Fale',          cu_s2d:'Explique seu problema, dúvida ou bloqueio. Em voz alta, sem filtros.',
+        cu_s3:'O pato pensa',  cu_s3d:'A IA local processa sua mensagem. Zero internet, zero dados enviados.',
+        cu_s4:'Responde',      cu_s4d:'O pato retorna uma resposta com sua personalidade escolhida.',
+        cu_s5:'Eureka!',       cu_s5d:'Quando entender, pressione Eureka. Confetes e pato feliz.',
+        feat_tag:'Funcionalidades', feat_title:'Não é mais um chatbot — É SEU PATO!!', feat_sub:'Cada detalhe é pensado para que a experiência pareça viva, não robótica.',
+        feat1:'Modo Tamagotchi',      feat1d:'Cuide do pato ou ele fica de mau humor. Seu estado de ânimo afeta como ele responde. Não o abandone.',
+        feat2:'Personalidade ajustável', feat2d:'Slider de mentor paciente a sem piedade. Perfeito para iniciantes ou sêniors que querem honestidade brutal.',
+        feat3:'Memória de conversa',  feat3d:'Lembra o contexto da sessão para respostas mais coerentes e úteis. O pato não esquece (na sessão).',
+        feat4:'Confete no Eureka',    feat4d:'Quando tiver um momento de clareza, pressione Eureka e celebre como merece. Conquistas merecem confete.',
+        feat5:'100% privado e local', feat5d:'Roda no seu computador com LM Studio. Sem APIs, sem assinaturas, sem espiões. O que é seu fica seu.',
+        feat6:'Para todo mundo',      feat6d:'Desenvolvedor? Perfeito. Não desenvolvedor? Também. O rubber duck é universal. Testamos em soldagem.',
+        arc_badge:'12 MINIJOGOS 🕹️', arc_title:'Quando seu cérebro<br>precisa de uma pausa',
+        arc_sub:'O pato te avisa quando você trabalha por tempo demais. Os jogos se adaptam ao seu modo: desenvolvedor ou geral.',
+        arc_mode_dev:'🦆 MODO DEV', arc_mode_gen:'🌍 MODO GERAL',
+        arc_dev:['Perguntas de JS, Python, Git','Palavras técnicas no Wordle','Bugs de código no Bug Hunt','Termos tech no Typing'],
+        arc_gen:['Perguntas de cultura geral','Palavras cotidianas no Wordle','Erros lógicos no Bug Hunt','Vocabulário geral no Typing'],
+        arc_pills:['⏱️ Frequência: 15 a 60 minutos','💾 Recordes salvos por jogo','🔕 Desativável nas configurações','🎭 Adapta-se ao seu modo de trabalho'],
+        cfg_tag:'Configurações', cfg_title:'Personalize do seu jeito', cfg_sub:'Quatro ajustes que mudam completamente como o pato fala com você.',
+        cfg_c1:'🎭 Personalidade', cfg_tab_dev:'🦆 Desenvolvedor', cfg_tab_gen:'🌍 Geral',
+        cfg_dev:['Referências técnicas e jargão dev','Exemplos de código nas respostas','Detecta bugs e analisa seu código','Modo debug socrático (não dá a solução diretamente)'],
+        cfg_gen:['Sem tecnicismos, linguagem cotidiana','Para qualquer tema: vida, decisões, ideias','Analogias do mundo real','Perfeito se você não é desenvolvedor'],
+        cfg_c2:'🎚️ Nível de sarcasmo', cfg_sl:'🎓 Mentor', cfg_sr:'😈 Sem piedade',
+        cfg_c3:'🥚 Modo Tamagotchi', cfg_energy:'Energia do pato',
+        cfg_moods:['Feliz — respostas calorosas e motivadoras','Neutro — respostas diretas e concisas','Irritado — mais sarcástico que o normal','Dormindo — precisa de atenção urgente'],
+        cfg_tama_on:'O estado de ânimo do pato determina automaticamente seu nível de sarcasmo. Cuide-o com Eurekas e Pomodoros.',
+        cfg_tama_off:'Modo manual ativado — você controla exatamente o quão direto o pato é com o slider acima.',
+        cfg_c4:'🧠 Memória de conversa',
+        cfg_mem_on:'🧠 O pato lembra o contexto da sessão. Respostas mais coerentes em conversas longas. A memória é comprimida automaticamente.',
+        cfg_mem_off:'Cada pergunta é independente. Mais rápido, sem contexto prévio.',
+        cfg_mem_note:'⚠️ A memória NÃO é salva entre sessões.',
+        cfg_c5:'🎮 Minijogos',
+        cfg_mini_on:'O pato te avisa quando você trabalha por tempo demais.',
+        cfg_mini_adapt:'Os jogos se adaptam automaticamente ao seu modo: desenvolvedor ou geral.',
+        cfg_mini_timer:'⏱️ Próximo jogo em:',
+        cfg_mini_off:['Modo descanso desativado.','Você pode acessar os jogos manualmente pelo botão 🎮 do widget quando quiser.','O pato não interromperá seu fluxo de trabalho.'],
+        lbl_tama_on:'Ativo', lbl_tama_off:'Manual', lbl_mem_on:'Ativa', lbl_mem_off:'Desativada', lbl_mini_on:'Ativo', lbl_mini_off:'Desativado',
+        req_tag:'Requisitos', req_title:'O que você precisa para usar?', req_sub:'Só três coisas. Nada complicado.',
+        req_items:['Mac com Apple Silicon (M1 · M2 · M3 · M4)','Windows 10 / 11 (x64)','LM Studio instalado e com servidor ativo','Microfone funcional'],
+        req_link:'Como configurar o LM Studio →',
+        cta_title:'Pronto para falar com o pato?', cta_sub:'Gratuito. Open source. Sem pegadinha.',
+        cta_download:'Baixar DebugDuck', cta_github:'Ver código-fonte no GitHub →', cta_version:'v0.1.1 — Mac (aarch64) · Windows (x64)',
+        footer_made:'Feito com 🦆 por Carlos Vallejo', footer_lic:'Open source sob licença MIT',
+      }
+    };
+
+    const LANG_META = { es:{flag:'🇪🇸',code:'ES'}, en:{flag:'🇬🇧',code:'EN'}, fr:{flag:'🇫🇷',code:'FR'}, de:{flag:'🇩🇪',code:'DE'}, pt:{flag:'🇧🇷',code:'PT'} };
+
+    function applyLanguage(lang) {
+      const t = TRANSLATIONS[lang];
+      if (!t) return;
+      const $ = (sel) => document.querySelector(sel);
+      const $$ = (sel) => document.querySelectorAll(sel);
+      const setText = (sel, val) => { const el=$(sel); if(el) el.textContent=val; };
+      const setHtml = (sel, val) => { const el=$(sel); if(el) el.innerHTML=val; };
+
+      // Navbar
+      const navLi = $$('#nav-links li a');
+      const navKeys = ['nav_inicio','nav_historia','nav_como_usar','nav_arcade','nav_config','nav_descargar'];
+      navLi.forEach((a,i) => { if(navKeys[i]) a.textContent = t[navKeys[i]]; });
+
+      // Hero
+      setText('.hero-sub', t.hero_sub);
+      const btnDl = $('.hero-buttons .btn-primary'); if(btnDl) btnDl.innerHTML=`⬇  ${t.hero_download}`;
+      setText('.hero-buttons .btn-ghost', t.hero_github);
+      setHtml('.hero-badge', `<span class="dot"></span>${t.hero_badge}`);
+
+      // Historia
+      setText('.historia-text .tag', t.hist_tag);
+      setText('.historia-text .section-title', t.hist_title);
+      setHtml('blockquote', `
+        <p>${t.hist_p1}</p>
+        <div class="highlight-block">${t.hist_spark}</div>
+        <p>${t.hist_p2}</p>
+        <p>${t.hist_p3a}<strong>${t.hist_p3b}</strong>${t.hist_p3c}</p>
+        <p>${t.hist_p4}</p>`);
+
+      // Como funciona
+      setText('#como-funciona .tag', t.cf_tag);
+      setText('#como-funciona .section-title', t.cf_title);
+      setText('#como-funciona .section-sub', t.cf_sub);
+      const cfCards = $$('#como-funciona .step-card');
+      const cfData = [[t.cf_s1,t.cf_s1d],[t.cf_s2,t.cf_s2d],[t.cf_s3,t.cf_s3d]];
+      cfCards.forEach((c,i)=>{if(cfData[i]){c.querySelector('.step-title').textContent=cfData[i][0];c.querySelector('.step-desc').textContent=cfData[i][1];}});
+
+      // Como usar
+      setText('#como-usar .tag', t.cu_tag);
+      setText('#como-usar .section-title', t.cu_title);
+      setText('#como-usar .section-sub', t.cu_sub);
+      const cuTitles=$$('#como-usar .flow-title'), cuDescs=$$('#como-usar .flow-desc');
+      const cuData=[[t.cu_s1,t.cu_s1d],[t.cu_s2,t.cu_s2d],[t.cu_s3,t.cu_s3d],[t.cu_s4,t.cu_s4d],[t.cu_s5,t.cu_s5d]];
+      cuData.forEach(([ti,de],i)=>{if(cuTitles[i])cuTitles[i].textContent=ti;if(cuDescs[i])cuDescs[i].textContent=de;});
+
+      // Features
+      setText('#features .tag', t.feat_tag);
+      setText('#features .section-title', t.feat_title);
+      setText('#features .section-sub', t.feat_sub);
+      const fCards=$$('#features .feature-card');
+      const fData=[[t.feat1,t.feat1d],[t.feat2,t.feat2d],[t.feat3,t.feat3d],[t.feat4,t.feat4d],[t.feat5,t.feat5d],[t.feat6,t.feat6d]];
+      fCards.forEach((c,i)=>{if(fData[i]){c.querySelector('.feat-title').textContent=fData[i][0];c.querySelector('.feat-desc').textContent=fData[i][1];}});
+
+      // Arcade
+      setText('.arcade-badge', t.arc_badge);
+      setHtml('.arcade-title', t.arc_title);
+      setText('.arcade-sub', t.arc_sub);
+      const modeBtns=$$('.mode-tab');
+      if(modeBtns[0])modeBtns[0].textContent=t.arc_mode_dev;
+      if(modeBtns[1])modeBtns[1].textContent=t.arc_mode_gen;
+      const devLis=$$('#mode-dev li'), genLis=$$('#mode-gen li');
+      t.arc_dev.forEach((v,i)=>{if(devLis[i])devLis[i].textContent=v;});
+      t.arc_gen.forEach((v,i)=>{if(genLis[i])genLis[i].textContent=v;});
+      const pills=$$('.arcade-pills-row .arcade-pill');
+      t.arc_pills.forEach((v,i)=>{if(pills[i])pills[i].textContent=v;});
+
+      // Config
+      setText('#configuracion .tag', t.cfg_tag);
+      setText('#configuracion .section-title', t.cfg_title);
+      setText('#configuracion .section-sub', t.cfg_sub);
+      const cfgTitles=$$('.config-card-title');
+      ['cfg_c1','cfg_c2','cfg_c3','cfg_c4','cfg_c5'].forEach((k,i)=>{if(cfgTitles[i])cfgTitles[i].textContent=t[k];});
+      const pTabs=$$('.toggle-opt');
+      if(pTabs[0])pTabs[0].textContent=t.cfg_tab_dev;
+      if(pTabs[1])pTabs[1].textContent=t.cfg_tab_gen;
+      setHtml('#tab-dev', `<ul class="tab-feature-list">${t.cfg_dev.map(v=>`<li class="tab-feature-item"><span class="tab-check">✓</span> ${v}</li>`).join('')}</ul>`);
+      setHtml('#tab-general', `<ul class="tab-feature-list">${t.cfg_gen.map(v=>`<li class="tab-feature-item"><span class="tab-check">✓</span> ${v}</li>`).join('')}</ul>`);
+      const slLabels=$$('.slider-labels span');
+      if(slLabels[0])slLabels[0].textContent=t.cfg_sl;
+      if(slLabels[1])slLabels[1].textContent=t.cfg_sr;
+      setText('.life-bar-label', t.cfg_energy);
+      setHtml('.tama-moods', t.cfg_moods.map((m,i)=>`<div class="tama-mood"><span class="tama-mood-icon">${['😄','😐','😤','😴'][i]}</span><span>${m}</span></div>`).join(''));
+      setText('#tama-on-content > .toggle-desc:last-of-type', t.cfg_tama_on);
+      setText('#tama-off-content .toggle-desc', t.cfg_tama_off);
+      setText('#mem-on-content .toggle-desc', t.cfg_mem_on);
+      setText('#mem-off-content .toggle-desc', t.cfg_mem_off);
+      setText('#configuracion .config-note', t.cfg_mem_note);
+      // Mini-games card
+      const miniOnPs=$$('#mini-on-content .toggle-desc');
+      if(miniOnPs[0])miniOnPs[0].textContent=t.cfg_mini_on;
+      if(miniOnPs[1])miniOnPs[1].textContent=t.cfg_mini_adapt;
+      const miniTimerEl=$('#mini-on-content .mini-timer');
+      if(miniTimerEl){const cd=$('#mini-countdown');miniTimerEl.innerHTML=`${t.cfg_mini_timer} <span id="mini-countdown">${cd?cd.textContent:'25:00'}</span>`;}
+      const miniOffPs=$$('#mini-off-content .toggle-desc');
+      t.cfg_mini_off.forEach((v,i)=>{if(miniOffPs[i])miniOffPs[i].textContent=v;});
+      // Toggle labels (respect current state)
+      const tamaLblEl=$('#tama-label'); if(tamaLblEl)tamaLblEl.textContent=tamaOn?t.lbl_tama_on:t.lbl_tama_off;
+      const memLblEl=$('#mem-label');   if(memLblEl)memLblEl.textContent=memOn?t.lbl_mem_on:t.lbl_mem_off;
+      const miniLblEl=$('#mini-label'); if(miniLblEl)miniLblEl.textContent=miniOn?t.lbl_mini_on:t.lbl_mini_off;
+
+      // Requisitos
+      setText('#requisitos .tag', t.req_tag);
+      setText('#requisitos .section-title', t.req_title);
+      setText('#requisitos .section-sub', t.req_sub);
+      const reqSpans=$$('.req-item span');
+      t.req_items.forEach((v,i)=>{if(reqSpans[i])reqSpans[i].textContent=v;});
+      setText('.req-link', t.req_link);
+
+      // CTA / Descarga
+      setText('.cta-title', t.cta_title);
+      setText('.cta-sub', t.cta_sub);
+      const ctaDl=$('.cta-buttons .btn-primary'); if(ctaDl)ctaDl.innerHTML=`⬇  ${t.cta_download}`;
+      setText('.cta-link-sm', t.cta_github);
+      setText('.cta-version', t.cta_version);
+
+      // Footer
+      setText('.footer-made', t.footer_made);
+      setText('.footer-lic', t.footer_lic);
+
+      // Update <html> lang attribute
+      document.documentElement.lang = lang;
+    }
+
+    // ── Language selector logic ───────────────────────────────────
+    const langBtn      = document.getElementById('lang-btn');
+    const langDropdown = document.getElementById('lang-dropdown');
+
+    langBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      langDropdown.classList.toggle('open');
+    });
+    document.addEventListener('click', () => langDropdown.classList.remove('open'));
+
+    function setLang(lang) {
+      langDropdown.classList.remove('open');
+      const meta = LANG_META[lang];
+      document.getElementById('lang-flag').textContent = meta.flag;
+      document.getElementById('lang-code').textContent = meta.code;
+      // Update checkmarks
+      Object.keys(LANG_META).forEach(l => {
+        const el = document.getElementById('lc-' + l);
+        if (el) el.textContent = l === lang ? '✓' : '';
+      });
+      applyLanguage(lang);
+      localStorage.setItem('dd_lang', lang);
+    }
+
+    langDropdown.querySelectorAll('li').forEach(li => {
+      li.addEventListener('click', () => setLang(li.dataset.lang));
+    });
+
+    // Boot: load saved language
+    const savedLang = localStorage.getItem('dd_lang') || 'es';
+    if (savedLang !== 'es') setLang(savedLang);
   </script>
 </body>
 </html>
