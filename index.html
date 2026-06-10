@@ -1319,6 +1319,46 @@
     .pbh-bar { width:100%; height:4px; background:#330000; margin-top:6px; }
     .pbh-tf  { height:100%; width:16%; background:#ff0000; }
 
+    /* Frogger */
+    .prev-frogger {
+      width:100%; height:100%; background:#000; position:relative;
+      overflow:hidden; display:flex; flex-direction:column;
+      justify-content:space-between; padding:6px 0;
+    }
+    .pf-meta {
+      font-family:'Space Mono',monospace; font-size:.58rem; color:#00ff00;
+      text-align:center; letter-spacing:.08em; opacity:.7;
+    }
+    .pf-lane {
+      position:relative; height:30px; border-top:1px dashed rgba(0,255,0,.18);
+      overflow:hidden;
+    }
+    .pf-car {
+      position:absolute; top:50%; transform:translateY(-50%);
+      font-family:'Courier New',monospace; font-size:.75rem; color:#00ff00;
+      white-space:nowrap;
+    }
+    @keyframes go-right {
+      from { left:-60px; }
+      to   { left:110%; }
+    }
+    @keyframes go-left {
+      from { left:110%; }
+      to   { left:-60px; }
+    }
+    .pf-r { animation:go-right linear infinite; }
+    .pf-l { animation:go-left  linear infinite; }
+    .pf-r1 { animation-duration:2s;   animation-delay:0s; }
+    .pf-r2 { animation-duration:2s;   animation-delay:1.1s; }
+    .pf-l1 { animation-duration:3s;   animation-delay:0s; }
+    .pf-l2 { animation-duration:3s;   animation-delay:1.6s; }
+    .pf-r3 { animation-duration:2.5s; animation-delay:0.4s; }
+    .pf-r4 { animation-duration:2.5s; animation-delay:1.7s; }
+    .pf-duck {
+      font-family:'Courier New',monospace; font-size:.8rem; color:#FFD700;
+      text-align:center; letter-spacing:.05em;
+    }
+
     /* Wordle */
     .prev-wordle { display:flex; flex-direction:column; align-items:center; gap:4px; width:90%; }
     .pw-row  { display:flex; gap:3px; }
@@ -1853,7 +1893,7 @@
 
         <!-- Derecha: título + modo toggle -->
         <div class="arcade-content reveal">
-          <span class="arcade-badge">11 MINIJUEGOS 🕹️</span>
+          <span class="arcade-badge">12 MINIJUEGOS 🕹️</span>
 
           <h2 class="arcade-title">Cuando tu cerebro<br>necesita un respiro</h2>
           <p class="arcade-sub">
@@ -2099,6 +2139,33 @@
               <div class="c-card-footer">
                 <span class="c-desc">Adivina la palabra tech en 6 intentos.</span>
                 <span class="c-rule">💬 50 palabras &nbsp; 🟩 Verde = posición correcta</span>
+              </div>
+            </div>
+
+            <!-- CARD 12: FROGGER DUCK -->
+            <div class="c-card">
+              <div class="c-card-header">FROGGER DUCK 🚗</div>
+              <div class="c-preview">
+                <div class="prev-frogger">
+                  <div class="pf-lane pf-top">
+                    <span class="pf-car pf-r pf-r1">[==]</span>
+                    <span class="pf-car pf-r pf-r2">[=]</span>
+                  </div>
+                  <div class="pf-lane pf-mid">
+                    <span class="pf-car pf-l pf-l1">[===]</span>
+                    <span class="pf-car pf-l pf-l2">[==]</span>
+                  </div>
+                  <div class="pf-lane pf-bot">
+                    <span class="pf-car pf-r pf-r3">[==-]</span>
+                    <span class="pf-car pf-r pf-r4">[=]</span>
+                  </div>
+                  <div class="pf-duck">&gt;('v'&lt;)</div>
+                  <div class="pf-meta">══ META ══</div>
+                </div>
+              </div>
+              <div class="c-card-footer">
+                <span class="c-desc">Carretera infinita. Los coches no frenan.</span>
+                <span class="c-rule">↑↓←→ Esquivar coches &nbsp; ♥♥♥ Tres vidas &nbsp; 📈 Velocidad infinita</span>
               </div>
             </div>
 
