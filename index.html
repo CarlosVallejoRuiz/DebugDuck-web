@@ -1165,6 +1165,179 @@
       white-space: nowrap;
     }
 
+    /* ── MODE TOGGLE ── */
+    .mode-toggle-container { display:flex; flex-direction:column; gap:10px; }
+    .mode-tabs { display:flex; border:1px solid rgba(0,255,0,0.4); border-radius:4px; overflow:hidden; width:fit-content; }
+    .mode-tab {
+      background:none; border:none; color:rgba(0,255,0,0.5);
+      font-family:'Space Mono',monospace; font-size:0.72rem; font-weight:700;
+      letter-spacing:.06em; padding:8px 14px; cursor:pointer; transition:all .2s;
+    }
+    .mode-tab.active { background:#FFD700; color:#000; }
+    .mode-tab:not(.active):hover { background:rgba(0,255,0,.1); color:rgba(0,255,0,.9); }
+    .mode-content {
+      border:1px solid rgba(0,255,0,.25); background:rgba(0,255,0,.04);
+      border-radius:4px; padding:13px 16px;
+      font-family:'Courier New',monospace; font-size:.78rem;
+      color:rgba(0,255,0,.8); line-height:1.75; display:none;
+    }
+    .mode-content.active { display:block; }
+    .mode-content ul { list-style:none; padding:0; margin:0; }
+    .mode-content li::before { content:'• '; color:#00ff00; }
+
+    /* ── CAROUSEL ── */
+    .carousel-outer {
+      width:100%; margin-top:52px; position:relative; overflow:hidden;
+    }
+    .carousel-outer::before,
+    .carousel-outer::after {
+      content:''; position:absolute; top:0; bottom:0; width:90px; z-index:2; pointer-events:none;
+    }
+    .carousel-outer::before { left:0; background:linear-gradient(to right,#0a0a0a,transparent); }
+    .carousel-outer::after  { right:0; background:linear-gradient(to left,#0a0a0a,transparent); }
+    .carousel-wrapper { overflow:hidden; width:100%; }
+    .carousel-track {
+      display:flex; gap:20px; width:max-content;
+      animation:scroll-infinite 50s linear infinite;
+      padding:12px 0 18px;
+    }
+    .carousel-wrapper:hover .carousel-track { animation-play-state:paused; }
+    @keyframes scroll-infinite {
+      0%   { transform:translateX(0); }
+      100% { transform:translateX(-50%); }
+    }
+
+    /* ── CAROUSEL CARD ── */
+    .c-card {
+      width:280px; flex-shrink:0; background:#000; border:1px solid #00ff00;
+      border-radius:8px; overflow:hidden; display:flex; flex-direction:column;
+      transition:border-color .2s,box-shadow .2s; cursor:default;
+    }
+    .c-card:hover { border-color:#fff; box-shadow:0 0 18px rgba(0,255,0,.4); }
+    .c-card-header {
+      padding:11px 14px 9px; border-bottom:1px solid rgba(0,255,0,.3);
+      font-family:'Space Mono',monospace; font-size:.8rem; font-weight:700;
+      color:#00ff00; display:flex; align-items:center; gap:6px;
+    }
+    .c-card-header::before { content:'> '; opacity:.55; }
+    .c-preview {
+      height:158px; background:#050505; display:flex; align-items:center;
+      justify-content:center; overflow:hidden; position:relative; flex-shrink:0;
+    }
+    .c-card-footer {
+      padding:10px 14px 12px; border-top:1px solid rgba(0,255,0,.2);
+      display:flex; flex-direction:column; gap:5px; flex:1;
+    }
+    .c-desc { font-family:'Courier New',monospace; font-size:.73rem; color:rgba(0,255,0,.7); line-height:1.4; }
+    .c-rule { font-family:'Courier New',monospace; font-size:.67rem; color:rgba(255,255,255,.38); line-height:1.45; }
+
+    /* ── PILLS ROW full-width ── */
+    .arcade-pills-row {
+      display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:32px;
+    }
+
+    /* ── GAME PREVIEWS ── */
+
+    /* Flappy */
+    .prev-flappy { width:100%; height:100%; background:#000; position:relative; overflow:hidden; }
+    .prev-flappy .fp-score { position:absolute; top:7px; left:9px; font-family:'Space Mono',monospace; font-size:.62rem; color:#00ff00; }
+    .prev-flappy .fp-duck  { position:absolute; left:22%; top:50%; transform:translateY(-50%); font-size:1.05rem; color:#FFD700; animation:duckBob 1.8s ease-in-out infinite; white-space:nowrap; }
+    @keyframes duckBob { 0%,100%{transform:translateY(-50%);}50%{transform:translateY(calc(-50% - 18px));} }
+    .prev-flappy .fp-pipe  { position:absolute; display:flex; flex-direction:column; width:22px; top:0; bottom:0; }
+    .prev-flappy .fp-pipe.p1 { right:18%; }
+    .prev-flappy .fp-pipe.p2 { right:44%; }
+    .fp-ptop { background:#00aa00; border:1px solid #00ff00; border-radius:0 0 3px 3px; }
+    .fp-pgap { min-height:40px; }
+    .fp-pbot { background:#00aa00; border:1px solid #00ff00; border-radius:3px 3px 0 0; }
+    .fp-pipe.p1 .fp-ptop { flex:2; } .fp-pipe.p1 .fp-pbot { flex:2; }
+    .fp-pipe.p2 .fp-ptop { flex:3; } .fp-pipe.p2 .fp-pbot { flex:1; }
+
+    /* Quiz */
+    .prev-quiz { width:92%; font-family:'Courier New',monospace; font-size:.68rem; }
+    .pq-q   { color:#fff; margin-bottom:8px; font-size:.7rem; line-height:1.35; }
+    .pq-opt { border:1px solid rgba(0,255,0,.35); color:rgba(0,255,0,.7); padding:3px 7px; margin-bottom:4px; display:block; }
+    .pq-opt.sel { background:rgba(0,255,0,.18); border-color:#00ff00; color:#fff; }
+    .pq-bar { width:100%; height:4px; background:#003300; margin-top:9px; }
+    .pq-fill { height:100%; width:58%; background:#00ff00; }
+
+    /* Pixel */
+    .prev-pixel { display:flex; flex-direction:column; align-items:center; gap:6px; }
+    .pp-grid {
+      display:grid; grid-template-columns:repeat(8,1fr);
+      gap:1px; background:#111; border:1px solid rgba(0,255,0,.35);
+      width:108px; height:108px;
+    }
+    .pp-cell { background:#000; }
+    .pp-cell.on  { background:#00ff00; }
+    .pp-cell.cur { animation:blink-px .8s step-end infinite; }
+    @keyframes blink-px { 0%,100%{background:rgba(0,255,0,.3);}50%{background:#00ff00;} }
+
+    /* Typing */
+    .prev-typing { width:90%; font-family:'Courier New',monospace; text-align:center; }
+    .pt-word   { font-size:1.5rem; color:#fff; letter-spacing:.2em; margin-bottom:11px; font-family:'Space Mono',monospace; }
+    .pt-input  { border-bottom:2px solid #00ff00; color:#00ff00; font-size:.85rem; padding-bottom:3px; letter-spacing:.12em; display:inline-block; }
+    .pt-cursor { animation:blink-c .7s step-end infinite; }
+    @keyframes blink-c { 0%,100%{opacity:1;}50%{opacity:0;} }
+    .pt-stats  { font-size:.6rem; color:rgba(0,255,0,.45); margin-top:9px; }
+
+    /* Math */
+    .prev-math { width:90%; font-family:'Courier New',monospace; text-align:center; }
+    .pm-prob { font-size:1.7rem; color:#fff; letter-spacing:.1em; margin-bottom:10px; }
+    .pm-inp  { border:1px solid #00ff00; color:#00ff00; font-size:.95rem; padding:4px 14px; display:inline-block; }
+    .pm-bar  { width:100%; height:5px; background:#003300; margin-top:11px; }
+    .pm-fill { height:100%; width:32%; background:#ff0000; }
+
+    /* TTT */
+    .prev-ttt { font-family:'Courier New',monospace; font-size:.78rem; color:#00ff00; white-space:pre; line-height:1.5; }
+
+    /* Memory */
+    .prev-memory { display:grid; grid-template-columns:repeat(4,1fr); gap:5px; width:170px; }
+    .pm-c { width:36px; height:36px; border:1px solid rgba(0,255,0,.4); display:flex; align-items:center; justify-content:center; font-size:.85rem; background:#000; color:rgba(0,255,0,.5); font-family:'Courier New',monospace; }
+    .pm-c.flipped { background:rgba(0,255,0,.08); border-color:#ccc; color:#fff; }
+    .pm-c.matched { background:rgba(0,255,0,.15); border-color:#00ff00; }
+
+    /* Beat */
+    .prev-beat { display:flex; flex-direction:column; align-items:center; gap:10px; width:90%; }
+    .pb-info   { font-family:'Space Mono',monospace; font-size:.68rem; color:rgba(0,255,0,.7); display:flex; justify-content:space-between; width:100%; }
+    .pb-btns   { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; width:100%; }
+    .pb-btn    { height:44px; border:2px solid rgba(0,255,0,.45); background:#000; color:rgba(0,255,0,.7); font-family:'Space Mono',monospace; font-size:.6rem; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:1px; border-radius:3px; }
+    .pb-btn.lit { background:#fff; color:#000; border-color:#fff; box-shadow:0 0 10px rgba(0,255,0,.5); }
+    .pb-note   { font-size:1.1rem; animation:blink-c .9s step-end infinite; }
+
+    /* Sudoku */
+    .prev-sudoku { font-family:'Courier New',monospace; font-size:.72rem; color:#00ff00; white-space:pre; line-height:1.6; }
+    .ps-sel { color:#ffff00; font-weight:700; }
+
+    /* Bug Hunt */
+    .prev-bughunt { width:92%; font-family:'Courier New',monospace; font-size:.67rem; }
+    .pbh-line { display:flex; gap:6px; padding:3px 6px; color:#00ff00; line-height:1.5; }
+    .pbh-num  { color:rgba(0,255,0,.4); min-width:12px; text-align:right; }
+    .pbh-sep  { color:rgba(0,255,0,.25); }
+    .pbh-code { white-space:pre; overflow:hidden; }
+    .pbh-line.bug { background:rgba(255,0,0,.14); animation:bug-blink 1s step-end infinite; }
+    @keyframes bug-blink { 0%,100%{background:rgba(255,0,0,.14);}50%{background:rgba(255,0,0,.27);} }
+    .pbh-bar { width:100%; height:4px; background:#330000; margin-top:6px; }
+    .pbh-tf  { height:100%; width:16%; background:#ff0000; }
+
+    /* Wordle */
+    .prev-wordle { display:flex; flex-direction:column; align-items:center; gap:4px; width:90%; }
+    .pw-row  { display:flex; gap:3px; }
+    .pw-cell { width:24px; height:24px; border:1px solid rgba(0,255,0,.3); display:flex; align-items:center; justify-content:center; font-size:.6rem; font-family:'Space Mono',monospace; font-weight:700; color:#00ff00; }
+    .pw-cell.cor { background:#00ff00; color:#000; border-color:#00ff00; }
+    .pw-cell.pre { background:#ffff00; color:#000; border-color:#ffff00; }
+    .pw-cell.abs { background:#222; color:#555; border-color:#222; }
+    .pw-kb { display:flex; gap:2px; margin-top:5px; }
+    .pw-k  { font-size:.44rem; font-family:'Courier New',monospace; color:rgba(0,255,0,.5); border:1px solid rgba(0,255,0,.2); padding:2px 3px; }
+    .pw-k.cor { background:rgba(0,255,0,.2); }
+
+    @media (max-width: 768px) {
+      .c-card { width: 240px; }
+      .carousel-outer::before, .carousel-outer::after { width: 44px; }
+    }
+    @media (max-width: 580px) {
+      .c-card { width: 220px; }
+    }
+
     /* ================================================================
        CONFIG — INTERACTIVE ADDITIONS
        ================================================================ */
@@ -1678,57 +1851,269 @@
           </div>
         </div>
 
-        <!-- Derecha: contenido -->
+        <!-- Derecha: título + modo toggle -->
         <div class="arcade-content reveal">
-          <span class="arcade-badge">NUEVO 🕹️</span>
+          <span class="arcade-badge">11 MINIJUEGOS 🕹️</span>
 
           <h2 class="arcade-title">Cuando tu cerebro<br>necesita un respiro</h2>
           <p class="arcade-sub">
             El pato te avisa cuando llevas demasiado tiempo trabajando.
-            Pausa, juega un rato y vuelve con más claridad.
+            Los juegos se adaptan a tu modo: programador o general.
           </p>
 
-          <div class="games-grid">
-            <div class="game-card">
-              <span class="game-emoji">🎯</span>
-              <span class="game-name">Flappy Duck</span>
-              <span class="game-desc">Esquiva obstáculos. Como los deadlines.</span>
+          <!-- Mode toggle -->
+          <div class="mode-toggle-container">
+            <div class="mode-tabs">
+              <button class="mode-tab active" onclick="modeSwitch(this,'dev')">🦆 MODO PROGRAMADOR</button>
+              <button class="mode-tab" onclick="modeSwitch(this,'gen')">🌍 MODO GENERAL</button>
             </div>
-            <div class="game-card">
-              <span class="game-emoji">🧠</span>
-              <span class="game-name">Debug Quiz</span>
-              <span class="game-desc">¿Cuánto sabes realmente de programación?</span>
+            <div class="mode-content active" id="mode-dev">
+              <ul>
+                <li>Preguntas de JS, Python, Git</li>
+                <li>Palabras técnicas en Wordle</li>
+                <li>Bugs de código en Bug Hunt</li>
+                <li>Términos tech en Typing</li>
+              </ul>
             </div>
-            <div class="game-card">
-              <span class="game-emoji">🎨</span>
-              <span class="game-name">Pato Pixel</span>
-              <span class="game-desc">Dibuja. La IA local te puntúa sin piedad.</span>
+            <div class="mode-content" id="mode-gen">
+              <ul>
+                <li>Preguntas de cultura general</li>
+                <li>Palabras cotidianas en Wordle</li>
+                <li>Errores lógicos en Bug Hunt</li>
+                <li>Vocabulario general en Typing</li>
+              </ul>
             </div>
-            <div class="game-card">
-              <span class="game-emoji">⚡</span>
-              <span class="game-name">Duck Typing</span>
-              <span class="game-desc">Velocidad de escritura con términos técnicos.</span>
-            </div>
-            <div class="game-card">
-              <span class="game-emoji">🔢</span>
-              <span class="game-name">Duck Math</span>
-              <span class="game-desc">Operaciones mentales contra el reloj.</span>
-            </div>
-            <div class="game-card">
-              <span class="game-emoji">❌⭕</span>
-              <span class="game-name">3 en Raya</span>
-              <span class="game-desc">Juega contra el pato. Nunca ganarás.</span>
-            </div>
-          </div>
-
-          <div class="arcade-pills">
-            <span class="arcade-pill">⏱️ Frecuencia ajustable: 15–60 min</span>
-            <span class="arcade-pill">💾 Scores guardados por sesión</span>
-            <span class="arcade-pill">🔕 Desactivable en ajustes</span>
           </div>
         </div>
 
       </div>
+
+      <!-- Carrusel infinito con las 11 cards -->
+      <div class="carousel-outer reveal">
+        <div class="carousel-wrapper">
+          <div class="carousel-track" id="arcade-carousel">
+
+            <!-- CARD 1: FLAPPY DUCK -->
+            <div class="c-card">
+              <div class="c-card-header">FLAPPY DUCK 🎯</div>
+              <div class="c-preview">
+                <div class="prev-flappy">
+                  <span class="fp-score">SCORE: 12</span>
+                  <span class="fp-duck">≧(^▽^)≦</span>
+                  <div class="fp-pipe p2"><div class="fp-ptop"></div><div class="fp-pgap"></div><div class="fp-pbot"></div></div>
+                  <div class="fp-pipe p1"><div class="fp-ptop"></div><div class="fp-pgap"></div><div class="fp-pbot"></div></div>
+                </div>
+              </div>
+              <div class="c-card-footer">
+                <span class="c-desc">Esquiva obstáculos. Como los deadlines.</span>
+                <span class="c-rule">⎵ Espacio / click para volar &nbsp; 💀 Un toque = game over</span>
+              </div>
+            </div>
+
+            <!-- CARD 2: DEBUG QUIZ -->
+            <div class="c-card">
+              <div class="c-card-header">DEBUG QUIZ 🧠</div>
+              <div class="c-preview">
+                <div class="prev-quiz">
+                  <div class="pq-q">¿Qué devuelve<br>typeof null?</div>
+                  <div class="pq-opt sel">[A] "object" ✓</div>
+                  <div class="pq-opt">[B] "null"</div>
+                  <div class="pq-opt">[C] "undefined"</div>
+                  <div class="pq-bar"><div class="pq-fill"></div></div>
+                </div>
+              </div>
+              <div class="c-card-footer">
+                <span class="c-desc">¿Cuánto sabes realmente de programación?</span>
+                <span class="c-rule">🧩 10 preguntas &nbsp; ⏱ 20 segundos cada una</span>
+              </div>
+            </div>
+
+            <!-- CARD 3: PATO PIXEL -->
+            <div class="c-card">
+              <div class="c-card-header">PATO PIXEL 🎨</div>
+              <div class="c-preview">
+                <div class="prev-pixel">
+                  <div class="pp-grid">
+                    <div class="pp-cell"></div><div class="pp-cell"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell"></div><div class="pp-cell"></div><div class="pp-cell"></div><div class="pp-cell"></div>
+                    <div class="pp-cell"></div><div class="pp-cell"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell"></div><div class="pp-cell"></div>
+                    <div class="pp-cell"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell"></div>
+                    <div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell"></div>
+                    <div class="pp-cell"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell cur"></div><div class="pp-cell"></div>
+                    <div class="pp-cell"></div><div class="pp-cell"></div><div class="pp-cell on"></div><div class="pp-cell on"></div><div class="pp-cell"></div><div class="pp-cell"></div><div class="pp-cell"></div><div class="pp-cell"></div>
+                    <div class="pp-cell"></div><div class="pp-cell"></div><div class="pp-cell"></div><div class="pp-cell on"></div><div class="pp-cell"></div><div class="pp-cell"></div><div class="pp-cell"></div><div class="pp-cell"></div>
+                    <div class="pp-cell"></div><div class="pp-cell"></div><div class="pp-cell"></div><div class="pp-cell"></div><div class="pp-cell"></div><div class="pp-cell"></div><div class="pp-cell"></div><div class="pp-cell"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="c-card-footer">
+                <span class="c-desc">Dibuja. La IA local te puntúa sin piedad.</span>
+                <span class="c-rule">🖱 Click / touch para pintar &nbsp; ⏱ 45 segundos</span>
+              </div>
+            </div>
+
+            <!-- CARD 4: DUCK TYPING -->
+            <div class="c-card">
+              <div class="c-card-header">DUCK TYPING ⚡</div>
+              <div class="c-preview">
+                <div class="prev-typing">
+                  <div class="pt-word">ASYNC</div>
+                  <div class="pt-input">ASY<span class="pt-cursor">_</span></div>
+                  <div class="pt-stats">WPM: 47 &nbsp; PRECISIÓN: 100%</div>
+                </div>
+              </div>
+              <div class="c-card-footer">
+                <span class="c-desc">Velocidad de escritura con términos técnicos.</span>
+                <span class="c-rule">⌨ Escribe la palabra exacta &nbsp; ⏱ 60 segundos</span>
+              </div>
+            </div>
+
+            <!-- CARD 5: DUCK MATH -->
+            <div class="c-card">
+              <div class="c-card-header">DUCK MATH 🔢</div>
+              <div class="c-preview">
+                <div class="prev-math">
+                  <div class="pm-prob">7 × 8 = ?</div>
+                  <div class="pm-inp">__<span class="pt-cursor">_</span></div>
+                  <div class="pm-bar"><div class="pm-fill"></div></div>
+                </div>
+              </div>
+              <div class="c-card-footer">
+                <span class="c-desc">Operaciones mentales contra el reloj.</span>
+                <span class="c-rule">🔢 10 rondas &nbsp; ⏱ 15 segundos cada una</span>
+              </div>
+            </div>
+
+            <!-- CARD 6: 3 EN RAYA -->
+            <div class="c-card">
+              <div class="c-card-header">3 EN RAYA ❌⭕</div>
+              <div class="c-preview">
+                <div class="prev-ttt">┌─┬─┬─┐
+│✕│ │○│
+├─┼─┼─┤
+│ │✕│ │
+├─┼─┼─┤
+│○│ │✕│
+└─┴─┴─┘</div>
+              </div>
+              <div class="c-card-footer">
+                <span class="c-desc">Juega contra el pato. Nunca ganarás.</span>
+                <span class="c-rule">🤖 IA con Minimax &nbsp; 💡 El pato juega perfecto</span>
+              </div>
+            </div>
+
+            <!-- CARD 7: MEMORY DUCK -->
+            <div class="c-card">
+              <div class="c-card-header">MEMORY DUCK 🃏</div>
+              <div class="c-preview">
+                <div class="prev-memory">
+                  <div class="pm-c matched">💻</div><div class="pm-c">?</div><div class="pm-c flipped">🐛</div><div class="pm-c">?</div>
+                  <div class="pm-c">?</div><div class="pm-c matched">💻</div><div class="pm-c">?</div><div class="pm-c">?</div>
+                  <div class="pm-c">?</div><div class="pm-c flipped">🐛</div><div class="pm-c">?</div><div class="pm-c">?</div>
+                  <div class="pm-c">?</div><div class="pm-c">?</div><div class="pm-c">?</div><div class="pm-c">?</div>
+                </div>
+              </div>
+              <div class="c-card-footer">
+                <span class="c-desc">Parejas de emojis técnicos. ¿Tienes memoria?</span>
+                <span class="c-rule">🃏 3 niveles: 4×4, 4×6, 6×6</span>
+              </div>
+            </div>
+
+            <!-- CARD 8: DUCK BEAT -->
+            <div class="c-card">
+              <div class="c-card-header">DUCK BEAT 🎵</div>
+              <div class="c-preview">
+                <div class="prev-beat">
+                  <div class="pb-info">
+                    <span>RONDA: 5</span>
+                    <span class="pb-note">♪</span>
+                  </div>
+                  <div class="pb-btns">
+                    <div class="pb-btn">DO<span style="font-size:.48rem;opacity:.5;">[A]</span></div>
+                    <div class="pb-btn lit">MI<span style="font-size:.48rem;opacity:.6;">[S]</span></div>
+                    <div class="pb-btn">SOL<span style="font-size:.48rem;opacity:.5;">[D]</span></div>
+                    <div class="pb-btn">DO+<span style="font-size:.48rem;opacity:.5;">[F]</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="c-card-footer">
+                <span class="c-desc">Simon Says con sonidos. Escucha y repite.</span>
+                <span class="c-rule">🎹 Teclas A S D F &nbsp; 🎵 Secuencia crece cada ronda</span>
+              </div>
+            </div>
+
+            <!-- CARD 9: SUDOKU DUCK -->
+            <div class="c-card">
+              <div class="c-card-header">SUDOKU DUCK 🔲</div>
+              <div class="c-preview">
+                <div class="prev-sudoku">┌─┬─┬─┬─┐
+│1│ │3│ │
+├─┼─┼─┼─┤
+│ │4│ │2│
+├─┼─┼─┼─┤
+│3│<span class="ps-sel">■</span>│2│ │
+├─┼─┼─┼─┤
+│ │1│ │3│
+└─┴─┴─┴─┘</div>
+              </div>
+              <div class="c-card-footer">
+                <span class="c-desc">4×4. Números 1-4. Lógica pura.</span>
+                <span class="c-rule">🔲 Fácil (10 pistas) / Difícil (6 pistas)</span>
+              </div>
+            </div>
+
+            <!-- CARD 10: BUG HUNT -->
+            <div class="c-card">
+              <div class="c-card-header">BUG HUNT 🐛</div>
+              <div class="c-preview">
+                <div class="prev-bughunt">
+                  <div class="pbh-line"><span class="pbh-num">1</span><span class="pbh-sep">│</span><span class="pbh-code">for(let i=0; i&lt;=arr</span></div>
+                  <div class="pbh-line bug"><span class="pbh-num">2</span><span class="pbh-sep">│</span><span class="pbh-code">  console.log(arr[i]</span></div>
+                  <div class="pbh-line"><span class="pbh-num">3</span><span class="pbh-sep">│</span><span class="pbh-code">}</span></div>
+                  <div class="pbh-bar"><div class="pbh-tf"></div></div>
+                </div>
+              </div>
+              <div class="c-card-footer">
+                <span class="c-desc">Encuentra el bug antes de que llegue a prod.</span>
+                <span class="c-rule">🐛 10 rondas &nbsp; ⏱ 20 segundos para encontrarlo</span>
+              </div>
+            </div>
+
+            <!-- CARD 11: DUCK WORDLE -->
+            <div class="c-card">
+              <div class="c-card-header">DUCK WORDLE 💬</div>
+              <div class="c-preview">
+                <div class="prev-wordle">
+                  <div class="pw-row">
+                    <div class="pw-cell cor">R</div><div class="pw-cell cor">E</div><div class="pw-cell pre">A</div><div class="pw-cell abs">C</div><div class="pw-cell cor">T</div>
+                  </div>
+                  <div class="pw-row"><div class="pw-cell"></div><div class="pw-cell"></div><div class="pw-cell"></div><div class="pw-cell"></div><div class="pw-cell"></div></div>
+                  <div class="pw-row"><div class="pw-cell"></div><div class="pw-cell"></div><div class="pw-cell"></div><div class="pw-cell"></div><div class="pw-cell"></div></div>
+                  <div class="pw-row"><div class="pw-cell"></div><div class="pw-cell"></div><div class="pw-cell"></div><div class="pw-cell"></div><div class="pw-cell"></div></div>
+                  <div class="pw-row"><div class="pw-cell"></div><div class="pw-cell"></div><div class="pw-cell"></div><div class="pw-cell"></div><div class="pw-cell"></div></div>
+                  <div class="pw-row"><div class="pw-cell"></div><div class="pw-cell"></div><div class="pw-cell"></div><div class="pw-cell"></div><div class="pw-cell"></div></div>
+                  <div class="pw-kb">
+                    <div class="pw-k">Q</div><div class="pw-k">W</div><div class="pw-k cor">E</div><div class="pw-k cor">R</div><div class="pw-k cor">T</div><div class="pw-k">Y</div><div class="pw-k">U</div><div class="pw-k">I</div><div class="pw-k">O</div><div class="pw-k">P</div>
+                  </div>
+                </div>
+              </div>
+              <div class="c-card-footer">
+                <span class="c-desc">Adivina la palabra tech en 6 intentos.</span>
+                <span class="c-rule">💬 50 palabras &nbsp; 🟩 Verde = posición correcta</span>
+              </div>
+            </div>
+
+          </div><!-- /carousel-track -->
+        </div>
+      </div>
+
+      <!-- Pills full-width -->
+      <div class="arcade-pills-row reveal">
+        <span class="arcade-pill">⏱️ Frecuencia: 15 a 60 minutos</span>
+        <span class="arcade-pill">💾 Records guardados por juego</span>
+        <span class="arcade-pill">🔕 Desactivable en ajustes</span>
+        <span class="arcade-pill">🎭 Se adapta a tu modo de trabajo</span>
+      </div>
+
     </div>
   </section>
 
@@ -2137,6 +2522,23 @@
         }
       }, { threshold: 0.2 });
       arcadeObs.observe(document.getElementById('arcade'));
+    }
+
+    // ── Mode toggle (Arcade) ──────────────────────────────────────
+    window.modeSwitch = function(btn, mode) {
+      document.querySelectorAll('.mode-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.mode-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      const el = document.getElementById('mode-' + mode);
+      if (el) el.classList.add('active');
+    };
+
+    // ── Duplicate carousel cards for seamless infinite loop ────────
+    const arcadeCarousel = document.getElementById('arcade-carousel');
+    if (arcadeCarousel) {
+      [...arcadeCarousel.children].forEach(card => {
+        arcadeCarousel.appendChild(card.cloneNode(true));
+      });
     }
 
     // ── Scroll Reveal ─────────────────────────────────────────────
