@@ -1496,6 +1496,47 @@
       border-top: 1px solid var(--yellow-medium);
     }
 
+    /* ── Card 5: Minijuegos ── */
+    .config-card.card-wide {
+      grid-column: 1 / -1;
+      max-width: 560px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .freq-selector {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 12px 0 4px;
+    }
+    .freq-btn {
+      background: none;
+      border: 1.5px solid rgba(255,215,0,0.4);
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--dark);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .freq-btn:hover { border-color: var(--yellow); background: rgba(255,215,0,0.08); }
+    .freq-btn.active { background: var(--yellow); border-color: var(--yellow); color: var(--dark); }
+    .mini-timer {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.82rem;
+      color: var(--dark);
+      background: rgba(255,215,0,0.1);
+      border: 1.5px solid rgba(255,215,0,0.3);
+      border-radius: 6px;
+      padding: 7px 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
     /* ================================================================
        RESPONSIVE
        ================================================================ */
@@ -2292,6 +2333,45 @@
           <p class="config-note">⚠️ La memoria NO se guarda entre sesiones.</p>
         </div>
 
+        <!-- Card 5: Minijuegos -->
+        <div class="config-card card-wide reveal">
+          <h3 class="config-card-title">🎮 Minijuegos</h3>
+          <div class="tama-toggle-row">
+            <span class="tama-toggle-label" id="mini-label">Activo</span>
+            <div class="tama-switch-wrap" id="mini-toggle">
+              <div class="tama-switch-visual" id="mini-switch"></div>
+            </div>
+          </div>
+
+          <div id="mini-on-content">
+            <p class="toggle-desc" style="font-size:.85rem;margin-bottom:14px;">
+              El pato te avisa cuando llevas demasiado tiempo trabajando.
+            </p>
+            <div class="freq-selector">
+              <button class="freq-btn" onclick="setFreq(this,15)">15 min</button>
+              <button class="freq-btn active" onclick="setFreq(this,25)">25 min</button>
+              <button class="freq-btn" onclick="setFreq(this,45)">45 min</button>
+              <button class="freq-btn" onclick="setFreq(this,60)">60 min</button>
+            </div>
+            <p class="toggle-desc" style="font-size:.82rem;margin-top:8px;">
+              Los juegos se adaptan automáticamente a tu modo: programador o general.
+            </p>
+            <div class="mini-timer">⏱️ Próximo juego en: <span id="mini-countdown">25:00</span></div>
+          </div>
+
+          <div id="mini-off-content" class="hidden">
+            <p class="toggle-desc" style="font-size:.85rem;">
+              Modo descanso desactivado.
+            </p>
+            <p class="toggle-desc" style="font-size:.82rem;margin-top:8px;">
+              Puedes acceder a los juegos manualmente desde el botón 🎮 del widget cuando quieras.
+            </p>
+            <p class="toggle-desc" style="font-size:.82rem;margin-top:8px;opacity:.65;">
+              El pato no interrumpirá tu flujo de trabajo.
+            </p>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -2477,6 +2557,53 @@
       memOnContent.classList.toggle('hidden', !memOn);
       memOffContent.classList.toggle('hidden', memOn);
     });
+
+    // ── Config: Minijuegos toggle ─────────────────────────────────
+    let miniOn = true;
+    let miniFreq = 25;
+    let miniSecs = 25 * 60;
+    let miniInterval = null;
+
+    const miniSwitch     = document.getElementById('mini-switch');
+    const miniLabel      = document.getElementById('mini-label');
+    const miniOnContent  = document.getElementById('mini-on-content');
+    const miniOffContent = document.getElementById('mini-off-content');
+
+    function updateCountdown() {
+      const el = document.getElementById('mini-countdown');
+      if (!el) return;
+      const m = String(Math.floor(miniSecs / 60)).padStart(2, '0');
+      const s = String(miniSecs % 60).padStart(2, '0');
+      el.textContent = m + ':' + s;
+    }
+
+    window.setFreq = function(btn, mins) {
+      document.querySelectorAll('.freq-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      miniFreq = mins;
+      miniSecs = mins * 60;
+      updateCountdown();
+    };
+
+    function startMiniCountdown() {
+      clearInterval(miniInterval);
+      miniInterval = setInterval(() => {
+        if (!miniOn) return;
+        miniSecs = miniSecs > 0 ? miniSecs - 1 : miniFreq * 60;
+        updateCountdown();
+      }, 1000);
+    }
+
+    document.getElementById('mini-toggle').addEventListener('click', () => {
+      miniOn = !miniOn;
+      miniSwitch.classList.toggle('off', !miniOn);
+      miniLabel.textContent = miniOn ? 'Activo' : 'Desactivado';
+      miniOnContent.classList.toggle('hidden', !miniOn);
+      miniOffContent.classList.toggle('hidden', miniOn);
+      if (miniOn) { miniSecs = miniFreq * 60; updateCountdown(); }
+    });
+
+    startMiniCountdown();
 
     // ── Duck Animation Engine ─────────────────────────────────────
 
