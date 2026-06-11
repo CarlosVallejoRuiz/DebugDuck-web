@@ -1564,6 +1564,101 @@
     .lang-check { margin-left:auto; color:var(--yellow); font-size:0.75rem; }
 
     /* ================================================================
+       HERO VERSION BADGE
+       ================================================================ */
+    .hero-version {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.32);
+      margin-top: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ================================================================
+       HISTORIAL
+       ================================================================ */
+    #historial { background: var(--yellow-light); }
+
+    .historial-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .hist-window {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+    .hist-win-bar {
+      background: #f5f5f5;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hist-dot { width:12px; height:12px; border-radius:50%; flex-shrink:0; }
+    .hist-win-title {
+      flex: 1;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #666;
+      font-family: 'Inter', sans-serif;
+    }
+    .hist-search {
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: #bbb;
+      background: #fafafa;
+    }
+    .hist-entry {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      transition: background 0.18s ease;
+      cursor: default;
+    }
+    .hist-entry:hover { background: var(--yellow-light); }
+    .hist-entry:last-child { border-bottom: none; }
+    .hist-entry-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+    .hist-time { font-size: 0.71rem; color: var(--muted); }
+    .hist-count {
+      font-size: 0.68rem;
+      color: var(--muted);
+      background: rgba(0,0,0,0.06);
+      padding: 2px 8px;
+      border-radius: 100px;
+    }
+    .hist-q {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 3px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .hist-a {
+      font-size: 0.78rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ================================================================
        RESPONSIVE
        ================================================================ */
     @media (max-width: 880px) {
@@ -1573,6 +1668,9 @@
       }
       .historia-visual { display: none; }
       .historia-text   { width: 100%; padding: 0; }
+
+      .historial-inner { grid-template-columns: 1fr; gap: 40px; }
+      .hist-window { max-width: 480px; margin: 0 auto; }
 
       .steps-grid {
         grid-template-columns: 1fr;
@@ -1696,6 +1794,7 @@
         <span class="dot"></span>
         Open Source &nbsp;·&nbsp; Gratuito &nbsp;·&nbsp; 100% Local
       </div>
+      <p class="hero-version">v0.3.0 — Ahora con Ollama, multiidioma y más</p>
     </div>
   </section>
 
@@ -1946,6 +2045,92 @@
             Lo probamos en soldadura.
           </p>
         </div>
+
+        <div class="feature-card reveal">
+          <span class="feat-emoji">🔌</span>
+          <h3 class="feat-title">Compatible con Ollama</h3>
+          <p class="feat-desc">
+            Además de LM Studio, ahora funciona con Ollama
+            y cualquier servidor compatible con la API de OpenAI.
+            Perfecto para equipos y servidores corporativos.
+          </p>
+        </div>
+
+        <div class="feature-card reveal">
+          <span class="feat-emoji">🌐</span>
+          <h3 class="feat-title">Multiidioma</h3>
+          <p class="feat-desc">
+            El pato responde en tu idioma.
+            Español, English, Français, Deutsch y Português.
+            Cambia el idioma desde los ajustes en un clic.
+          </p>
+        </div>
+
+        <div class="feature-card reveal">
+          <span class="feat-emoji">⌨️</span>
+          <h3 class="feat-title">Atajo de teclado global</h3>
+          <p class="feat-desc">
+            Activa el micrófono desde cualquier app
+            con Cmd+Shift+D (configurable).
+            Sin cambiar de ventana, sin interrumpir tu flujo.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       HISTORIAL
+       ============================================================ -->
+  <section id="historial" class="section">
+    <div class="container">
+      <div class="historial-inner">
+
+        <div class="reveal">
+          <span class="tag">NUEVO 📋</span>
+          <h2 class="section-title">Nada se pierde</h2>
+          <p class="section-sub">
+            El pato guarda las últimas 50 conversaciones.
+            Búscalas, cópialas o bórralas cuando quieras.
+          </p>
+        </div>
+
+        <div class="hist-window reveal">
+          <div class="hist-win-bar">
+            <span class="hist-dot" style="background:#ff5f57"></span>
+            <span class="hist-dot" style="background:#febc2e"></span>
+            <span class="hist-dot" style="background:#28c840"></span>
+            <span class="hist-win-title">Historial de conversaciones</span>
+          </div>
+          <div class="hist-search">
+            🔍&nbsp; <span>Buscar conversación...</span>
+          </div>
+          <div class="hist-entry">
+            <div class="hist-entry-meta">
+              <span class="hist-time">Hoy, 14:32</span>
+              <span class="hist-count">4 mensajes</span>
+            </div>
+            <p class="hist-q">¿Cómo optimizo este loop en Python?</p>
+            <p class="hist-a">El problema está en la complejidad O(n²). Prueba con un diccionario para...</p>
+          </div>
+          <div class="hist-entry">
+            <div class="hist-entry-meta">
+              <span class="hist-time">Hoy, 11:15</span>
+              <span class="hist-count">6 mensajes</span>
+            </div>
+            <p class="hist-q">Explícame el patrón Observer</p>
+            <p class="hist-a">El patrón Observer define una dependencia uno-a-muchos entre objetos...</p>
+          </div>
+          <div class="hist-entry" style="opacity:0.55">
+            <div class="hist-entry-meta">
+              <span class="hist-time">Ayer, 18:04</span>
+              <span class="hist-count">2 mensajes</span>
+            </div>
+            <p class="hist-q">¿Por qué se me olvidó hacer git commit?</p>
+            <p class="hist-a">Porque eres humano. Pero puedes configurar un alias para que te recuerde...</p>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>
@@ -2437,7 +2622,7 @@
           </div>
           <div class="req-item">
             <div class="req-check">✓</div>
-            <span>LM Studio instalado y con servidor activo</span>
+            <span>LM Studio o Ollama con servidor activo</span>
           </div>
           <div class="req-item">
             <div class="req-check">✓</div>
@@ -2482,7 +2667,7 @@
           </a>
         </div>
 
-        <p class="cta-version">v0.1.1 — Mac (aarch64) · Windows (x64)</p>
+        <p class="cta-version">v0.3.0 — Mac (aarch64) · Windows (x64)</p>
       </div>
     </div>
   </section>
@@ -2820,6 +3005,12 @@
         feat4:'Confeti al Eureka',        feat4d:'Cuando tengas un momento de claridad, pulsa Eureka y celebra como mereces. Los logros merecen confeti.',
         feat5:'100% privado y local',     feat5d:'Corre en tu ordenador con LM Studio. Sin APIs, sin suscripciones, sin espías. Lo tuyo es tuyo.',
         feat6:'Para todo el mundo',       feat6d:'¿Programador? Perfecto. ¿No programador? También. El rubber duck es universal. Lo probamos en soldadura.',
+        feat7:'Compatible con Ollama',    feat7d:'Además de LM Studio, ahora funciona con Ollama y cualquier servidor compatible con la API de OpenAI. Perfecto para equipos y servidores corporativos.',
+        feat8:'Multiidioma',              feat8d:'El pato responde en tu idioma. Español, English, Français, Deutsch y Português. Cambia el idioma desde los ajustes en un clic.',
+        feat9:'Atajo de teclado global',  feat9d:'Activa el micrófono desde cualquier app con Cmd+Shift+D (configurable). Sin cambiar de ventana, sin interrumpir tu flujo.',
+        hist2_tag:'NUEVO 📋', hist2_title:'Nada se pierde',
+        hist2_sub:'El pato guarda las últimas 50 conversaciones. Búscalas, cópialas o bórralas cuando quieras.',
+        hero_version:'v0.3.0 — Ahora con Ollama, multiidioma y más',
         arc_badge:'12 MINIJUEGOS 🕹️', arc_title:'Cuando tu cerebro<br>necesita un respiro',
         arc_sub:'El pato te avisa cuando llevas demasiado tiempo trabajando. Los juegos se adaptan a tu modo: programador o general.',
         arc_mode_dev:'🦆 MODO PROGRAMADOR', arc_mode_gen:'🌍 MODO GENERAL',
@@ -2846,10 +3037,10 @@
         cfg_mini_off:['Modo descanso desactivado.','Puedes acceder a los juegos manualmente desde el botón 🎮 del widget cuando quieras.','El pato no interrumpirá tu flujo de trabajo.'],
         lbl_tama_on:'Activo', lbl_tama_off:'Manual', lbl_mem_on:'Activa', lbl_mem_off:'Desactivada', lbl_mini_on:'Activo', lbl_mini_off:'Desactivado',
         req_tag:'Requisitos', req_title:'¿Qué necesitas para usarlo?', req_sub:'Solo tres cosas. Nada raro.',
-        req_items:['Mac con Apple Silicon (M1 · M2 · M3 · M4)','Windows 10 / 11 (x64)','LM Studio instalado y con servidor activo','Micrófono funcional'],
-        req_link:'Cómo configurar LM Studio →',
+        req_items:['Mac con Apple Silicon (M1 · M2 · M3 · M4)','Windows 10 / 11 (x64)','LM Studio o Ollama con servidor activo','Micrófono funcional'],
+        req_link:'Cómo configurar LM Studio u Ollama →',
         cta_title:'¿Listo para hablar con el pato?', cta_sub:'Gratis. Open source. Sin trampa.',
-        cta_download:'Descargar DebugDuck', cta_github:'Ver código fuente en GitHub →', cta_version:'v0.1.1 — Mac (aarch64) · Windows (x64)',
+        cta_download:'Descargar DebugDuck', cta_github:'Ver código fuente en GitHub →', cta_version:'v0.3.0 — Mac (aarch64) · Windows (x64)',
         footer_made:'Hecho con 🦆 por Carlos Vallejo', footer_lic:'Open source bajo licencia MIT',
       },
       en: {
@@ -2880,6 +3071,12 @@
         feat4:'Eureka confetti',          feat4d:'When you have a moment of clarity, press Eureka and celebrate as you deserve. Achievements deserve confetti.',
         feat5:'100% private & local',     feat5d:'Runs on your computer with LM Studio. No APIs, no subscriptions, no snooping. What\'s yours stays yours.',
         feat6:'For everyone',             feat6d:'Developer? Perfect. Not a developer? Also perfect. Rubber duck debugging is universal. We tested it in welding.',
+        feat7:'Ollama compatible',        feat7d:'Besides LM Studio, it now works with Ollama and any OpenAI-compatible server. Perfect for teams and corporate servers.',
+        feat8:'Multilanguage',            feat8d:'The duck answers in your language. Spanish, English, Français, Deutsch and Português. Change language from settings in one click.',
+        feat9:'Global keyboard shortcut', feat9d:'Activate the mic from any app with Cmd+Shift+D (configurable). No window switching, no interrupting your flow.',
+        hist2_tag:'NEW 📋', hist2_title:'Nothing gets lost',
+        hist2_sub:'The duck saves the last 50 conversations. Search, copy or delete them whenever you want.',
+        hero_version:'v0.3.0 — Now with Ollama, multilanguage & more',
         arc_badge:'12 MINI-GAMES 🕹️', arc_title:'When your brain<br>needs a break',
         arc_sub:'The duck alerts you when you\'ve been working too long. Games adapt to your mode: developer or general.',
         arc_mode_dev:'🦆 DEV MODE', arc_mode_gen:'🌍 GENERAL MODE',
@@ -2906,10 +3103,10 @@
         cfg_mini_off:['Break mode disabled.','You can access the games manually via the 🎮 button in the widget whenever you want.','The duck won\'t interrupt your workflow.'],
         lbl_tama_on:'Active', lbl_tama_off:'Manual', lbl_mem_on:'Active', lbl_mem_off:'Disabled', lbl_mini_on:'Active', lbl_mini_off:'Disabled',
         req_tag:'Requirements', req_title:'What do you need to use it?', req_sub:'Just three things. Nothing weird.',
-        req_items:['Mac with Apple Silicon (M1 · M2 · M3 · M4)','Windows 10 / 11 (x64)','LM Studio installed and running','Working microphone'],
-        req_link:'How to set up LM Studio →',
+        req_items:['Mac with Apple Silicon (M1 · M2 · M3 · M4)','Windows 10 / 11 (x64)','LM Studio or Ollama with server running','Working microphone'],
+        req_link:'How to set up LM Studio or Ollama →',
         cta_title:'Ready to talk to the duck?', cta_sub:'Free. Open source. No tricks.',
-        cta_download:'Download DebugDuck', cta_github:'View source on GitHub →', cta_version:'v0.1.1 — Mac (aarch64) · Windows (x64)',
+        cta_download:'Download DebugDuck', cta_github:'View source on GitHub →', cta_version:'v0.3.0 — Mac (aarch64) · Windows (x64)',
         footer_made:'Made with 🦆 by Carlos Vallejo', footer_lic:'Open source under MIT license',
       },
       fr: {
@@ -2940,6 +3137,12 @@
         feat4:'Confettis à l\'Eurêka',   feat4d:'À chaque moment de clarté, appuie sur Eurêka et célèbre comme tu le mérites. Les succès méritent des confettis.',
         feat5:'100% privé et local',     feat5d:'Tourne sur ton ordinateur avec LM Studio. Sans APIs, sans abonnements, sans espions. Ce qui est à toi reste à toi.',
         feat6:'Pour tout le monde',      feat6d:'Développeur ? Parfait. Pas développeur ? Aussi. Le rubber duck debugging est universel. On l\'a testé en soudure.',
+        feat7:'Compatible avec Ollama',   feat7d:'En plus de LM Studio, fonctionne maintenant avec Ollama et tout serveur compatible API OpenAI. Parfait pour les équipes et serveurs d\'entreprise.',
+        feat8:'Multilingue',              feat8d:'Le canard répond dans ta langue. Español, English, Français, Deutsch et Português. Change la langue en un clic depuis les paramètres.',
+        feat9:'Raccourci clavier global', feat9d:'Active le micro depuis n\'importe quelle app avec Cmd+Shift+D (configurable). Sans changer de fenêtre, sans interrompre ton flux.',
+        hist2_tag:'NOUVEAU 📋', hist2_title:'Rien ne se perd',
+        hist2_sub:'Le canard sauvegarde les 50 dernières conversations. Cherche-les, copie-les ou supprime-les quand tu veux.',
+        hero_version:'v0.3.0 — Maintenant avec Ollama, multilingue et plus',
         arc_badge:'12 MINI-JEUX 🕹️', arc_title:'Quand ton cerveau<br>a besoin d\'une pause',
         arc_sub:'Le canard t\'avertit quand tu travailles trop longtemps. Les jeux s\'adaptent à ton mode : développeur ou général.',
         arc_mode_dev:'🦆 MODE DEV', arc_mode_gen:'🌍 MODE GÉNÉRAL',
@@ -2966,10 +3169,10 @@
         cfg_mini_off:['Mode pause désactivé.','Tu peux accéder aux jeux manuellement via le bouton 🎮 du widget quand tu veux.','Le canard n\'interrompra pas ton flux de travail.'],
         lbl_tama_on:'Actif', lbl_tama_off:'Manuel', lbl_mem_on:'Activée', lbl_mem_off:'Désactivée', lbl_mini_on:'Actif', lbl_mini_off:'Désactivé',
         req_tag:'Prérequis', req_title:'De quoi as-tu besoin ?', req_sub:'Seulement trois choses. Rien de compliqué.',
-        req_items:['Mac avec Apple Silicon (M1 · M2 · M3 · M4)','Windows 10 / 11 (x64)','LM Studio installé et serveur actif','Microphone fonctionnel'],
-        req_link:'Comment configurer LM Studio →',
+        req_items:['Mac avec Apple Silicon (M1 · M2 · M3 · M4)','Windows 10 / 11 (x64)','LM Studio ou Ollama avec serveur actif','Microphone fonctionnel'],
+        req_link:'Comment configurer LM Studio ou Ollama →',
         cta_title:'Prêt à parler au canard ?', cta_sub:'Gratuit. Open source. Sans piège.',
-        cta_download:'Télécharger DebugDuck', cta_github:'Voir le code source sur GitHub →', cta_version:'v0.1.1 — Mac (aarch64) · Windows (x64)',
+        cta_download:'Télécharger DebugDuck', cta_github:'Voir le code source sur GitHub →', cta_version:'v0.3.0 — Mac (aarch64) · Windows (x64)',
         footer_made:'Fait avec 🦆 par Carlos Vallejo', footer_lic:'Open source sous licence MIT',
       },
       de: {
@@ -3000,6 +3203,12 @@
         feat4:'Heureka-Konfetti',        feat4d:'Bei einem Klarheitsmoment drücke Heureka und feiere wie du es verdienst. Leistungen verdienen Konfetti.',
         feat5:'100% privat & lokal',     feat5d:'Läuft auf deinem Computer mit LM Studio. Keine APIs, keine Abonnements, keine Spione. Was deins ist, bleibt deins.',
         feat6:'Für alle',                feat6d:'Entwickler? Perfekt. Kein Entwickler? Auch. Rubber-Duck-Debugging ist universell. Wir haben es beim Schweißen getestet.',
+        feat7:'Ollama-kompatibel',        feat7d:'Neben LM Studio funktioniert es jetzt auch mit Ollama und jedem OpenAI-API-kompatiblen Server. Perfekt für Teams und Unternehmensserver.',
+        feat8:'Mehrsprachig',             feat8d:'Die Ente antwortet in deiner Sprache. Español, English, Français, Deutsch und Português. Ändere die Sprache mit einem Klick in den Einstellungen.',
+        feat9:'Globaler Tastaturkürzel',  feat9d:'Aktiviere das Mikrofon aus jeder App mit Cmd+Shift+D (konfigurierbar). Kein Fensterwechsel, keine Unterbrechung deines Flusses.',
+        hist2_tag:'NEU 📋', hist2_title:'Nichts geht verloren',
+        hist2_sub:'Die Ente speichert die letzten 50 Gespräche. Such sie, kopiere sie oder lösche sie wann immer du willst.',
+        hero_version:'v0.3.0 — Jetzt mit Ollama, mehrsprachig und mehr',
         arc_badge:'12 MINISPIELE 🕹️', arc_title:'Wenn dein Gehirn<br>eine Pause braucht',
         arc_sub:'Die Ente warnt dich, wenn du zu lange arbeitest. Die Spiele passen sich deinem Modus an: Entwickler oder Allgemein.',
         arc_mode_dev:'🦆 ENTWICKLER-MODUS', arc_mode_gen:'🌍 ALLGEMEINER MODUS',
@@ -3026,10 +3235,10 @@
         cfg_mini_off:['Pausenmodus deaktiviert.','Du kannst jederzeit manuell über den 🎮-Button im Widget auf die Spiele zugreifen.','Die Ente wird deinen Arbeitsfluss nicht unterbrechen.'],
         lbl_tama_on:'Aktiv', lbl_tama_off:'Manuell', lbl_mem_on:'Aktiv', lbl_mem_off:'Deaktiviert', lbl_mini_on:'Aktiv', lbl_mini_off:'Deaktiviert',
         req_tag:'Voraussetzungen', req_title:'Was brauchst du zur Nutzung?', req_sub:'Nur drei Dinge. Nichts Kompliziertes.',
-        req_items:['Mac mit Apple Silicon (M1 · M2 · M3 · M4)','Windows 10 / 11 (x64)','LM Studio installiert und Server aktiv','Funktionierendes Mikrofon'],
-        req_link:'LM Studio einrichten →',
+        req_items:['Mac mit Apple Silicon (M1 · M2 · M3 · M4)','Windows 10 / 11 (x64)','LM Studio oder Ollama mit aktivem Server','Funktionierendes Mikrofon'],
+        req_link:'LM Studio oder Ollama einrichten →',
         cta_title:'Bereit, mit der Ente zu sprechen?', cta_sub:'Kostenlos. Open source. Kein Trick.',
-        cta_download:'DebugDuck herunterladen', cta_github:'Quellcode auf GitHub ansehen →', cta_version:'v0.1.1 — Mac (aarch64) · Windows (x64)',
+        cta_download:'DebugDuck herunterladen', cta_github:'Quellcode auf GitHub ansehen →', cta_version:'v0.3.0 — Mac (aarch64) · Windows (x64)',
         footer_made:'Gemacht mit 🦆 von Carlos Vallejo', footer_lic:'Open source unter MIT-Lizenz',
       },
       pt: {
@@ -3060,6 +3269,12 @@
         feat4:'Confete no Eureka',    feat4d:'Quando tiver um momento de clareza, pressione Eureka e celebre como merece. Conquistas merecem confete.',
         feat5:'100% privado e local', feat5d:'Roda no seu computador com LM Studio. Sem APIs, sem assinaturas, sem espiões. O que é seu fica seu.',
         feat6:'Para todo mundo',      feat6d:'Desenvolvedor? Perfeito. Não desenvolvedor? Também. O rubber duck é universal. Testamos em soldagem.',
+        feat7:'Compatível com Ollama', feat7d:'Além do LM Studio, agora funciona com Ollama e qualquer servidor compatível com a API OpenAI. Perfeito para equipes e servidores corporativos.',
+        feat8:'Multilíngue',           feat8d:'O pato responde no seu idioma. Español, English, Français, Deutsch e Português. Mude o idioma nas configurações com um clique.',
+        feat9:'Atalho de teclado global', feat9d:'Ative o microfone de qualquer app com Cmd+Shift+D (configurável). Sem trocar de janela, sem interromper seu fluxo.',
+        hist2_tag:'NOVO 📋', hist2_title:'Nada se perde',
+        hist2_sub:'O pato salva as últimas 50 conversas. Busque, copie ou delete quando quiser.',
+        hero_version:'v0.3.0 — Agora com Ollama, multilíngue e mais',
         arc_badge:'12 MINIJOGOS 🕹️', arc_title:'Quando seu cérebro<br>precisa de uma pausa',
         arc_sub:'O pato te avisa quando você trabalha por tempo demais. Os jogos se adaptam ao seu modo: desenvolvedor ou geral.',
         arc_mode_dev:'🦆 MODO DEV', arc_mode_gen:'🌍 MODO GERAL',
@@ -3086,10 +3301,10 @@
         cfg_mini_off:['Modo descanso desativado.','Você pode acessar os jogos manualmente pelo botão 🎮 do widget quando quiser.','O pato não interromperá seu fluxo de trabalho.'],
         lbl_tama_on:'Ativo', lbl_tama_off:'Manual', lbl_mem_on:'Ativa', lbl_mem_off:'Desativada', lbl_mini_on:'Ativo', lbl_mini_off:'Desativado',
         req_tag:'Requisitos', req_title:'O que você precisa para usar?', req_sub:'Só três coisas. Nada complicado.',
-        req_items:['Mac com Apple Silicon (M1 · M2 · M3 · M4)','Windows 10 / 11 (x64)','LM Studio instalado e com servidor ativo','Microfone funcional'],
-        req_link:'Como configurar o LM Studio →',
+        req_items:['Mac com Apple Silicon (M1 · M2 · M3 · M4)','Windows 10 / 11 (x64)','LM Studio ou Ollama com servidor ativo','Microfone funcional'],
+        req_link:'Como configurar o LM Studio ou Ollama →',
         cta_title:'Pronto para falar com o pato?', cta_sub:'Gratuito. Open source. Sem pegadinha.',
-        cta_download:'Baixar DebugDuck', cta_github:'Ver código-fonte no GitHub →', cta_version:'v0.1.1 — Mac (aarch64) · Windows (x64)',
+        cta_download:'Baixar DebugDuck', cta_github:'Ver código-fonte no GitHub →', cta_version:'v0.3.0 — Mac (aarch64) · Windows (x64)',
         footer_made:'Feito com 🦆 por Carlos Vallejo', footer_lic:'Open source sob licença MIT',
       }
     };
@@ -3146,8 +3361,18 @@
       setText('#features .section-title', t.feat_title);
       setText('#features .section-sub', t.feat_sub);
       const fCards=$$('#features .feature-card');
-      const fData=[[t.feat1,t.feat1d],[t.feat2,t.feat2d],[t.feat3,t.feat3d],[t.feat4,t.feat4d],[t.feat5,t.feat5d],[t.feat6,t.feat6d]];
+      const fData=[[t.feat1,t.feat1d],[t.feat2,t.feat2d],[t.feat3,t.feat3d],[t.feat4,t.feat4d],[t.feat5,t.feat5d],[t.feat6,t.feat6d],[t.feat7,t.feat7d],[t.feat8,t.feat8d],[t.feat9,t.feat9d]];
       fCards.forEach((c,i)=>{if(fData[i]){c.querySelector('.feat-title').textContent=fData[i][0];c.querySelector('.feat-desc').textContent=fData[i][1];}});
+
+      // Historial
+      if(t.hist2_tag){
+        setText('#historial .tag', t.hist2_tag);
+        setText('#historial .section-title', t.hist2_title);
+        setText('#historial .section-sub', t.hist2_sub);
+      }
+
+      // Hero version badge
+      if(t.hero_version) setText('.hero-version', t.hero_version);
 
       // Arcade
       setText('.arcade-badge', t.arc_badge);
