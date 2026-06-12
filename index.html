@@ -549,11 +549,16 @@
     .kbd-plus { color: var(--muted); font-weight: 600; font-size: 0.88rem; }
 
     /* ── Card 4: Compat logos ── */
-    .compat-logos { display: flex; gap: 9px; flex-wrap: wrap; margin-bottom: 10px; }
-    .compat-badge {
-      background: var(--yellow-medium); color: var(--dark);
-      padding: 5px 13px; border-radius: 7px;
-      font-size: 0.8rem; font-weight: 700; font-family: 'Space Mono', monospace;
+    .compat-logos {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 12px; flex-wrap: wrap;
+    }
+    .compat-logo-img {
+      height: 32px; width: auto;
+      object-fit: contain; display: block;
+    }
+    .compat-plus {
+      font-size: 1.1rem; font-weight: 700; color: var(--muted); flex-shrink: 0;
     }
 
     /* ── Card 5: Arcade retro ── */
@@ -2210,10 +2215,11 @@
 
         <!-- Card 4: LM Studio + Ollama (4×1) -->
         <div class="b-card b-card-4 reveal">
-          <h3 class="b-small-title">🔌 LM Studio + Ollama</h3>
+          <h3 class="b-small-title">🔌 Compatible con</h3>
           <div class="compat-logos">
-            <span class="compat-badge">LM Studio</span>
-            <span class="compat-badge">Ollama</span>
+            <img src="image/lmstudio-logo.png" alt="LM Studio" class="compat-logo-img">
+            <span class="compat-plus">+</span>
+            <img src="image/ollama-logo.png" alt="Ollama" class="compat-logo-img">
           </div>
           <p class="b-small-tag">O cualquier servidor compatible con la API de OpenAI.</p>
         </div>
