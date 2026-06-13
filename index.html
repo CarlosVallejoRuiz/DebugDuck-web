@@ -374,65 +374,6 @@
     }
 
     /* ================================================================
-       3. CÓMO FUNCIONA
-       ================================================================ */
-    #como-funciona {
-      background: var(--yellow-light);
-    }
-
-    .steps-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 28px;
-      position: relative;
-    }
-
-    /* Connector line between steps */
-    .steps-grid::before {
-      content: '';
-      position: absolute;
-      top: 44px;
-      left: calc(16.67% + 14px);
-      right: calc(16.67% + 14px);
-      height: 2px;
-      background: linear-gradient(90deg, var(--yellow) 0%, var(--yellow) 100%);
-      opacity: 0.5;
-      z-index: 0;
-    }
-
-    .step-card {
-      background: var(--white);
-      border-radius: var(--radius);
-      padding: 36px 24px 32px;
-      text-align: center;
-      box-shadow: var(--shadow);
-      transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
-      position: relative;
-      z-index: 1;
-    }
-    .step-card:hover {
-      transform: translateY(-6px);
-      box-shadow: var(--shadow-hover);
-    }
-
-    .step-num {
-      width: 38px; height: 38px;
-      background: var(--yellow);
-      color: var(--dark);
-      font-size: 0.95rem;
-      font-weight: 800;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 14px;
-    }
-
-    .step-icon  { font-size: 2.4rem; display: block; margin-bottom: 14px; }
-    .step-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 10px; color: var(--dark); }
-    .step-desc  { font-size: 0.93rem; color: var(--muted); line-height: 1.65; }
-
-    /* ================================================================
        4. FEATURES — BENTO GRID
        ================================================================ */
     #features { background: var(--white); }
@@ -1886,12 +1827,6 @@
       .historial-inner { grid-template-columns: 1fr; gap: 40px; }
       .hist-window { max-width: 480px; margin: 0 auto; }
 
-      .steps-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-      }
-      .steps-grid::before { display: none; }
-
       /* Bento tablet: 6 columnas */
       .bento-grid { grid-template-columns: repeat(6, 1fr); grid-auto-rows: 170px; }
       .b-card-1 { grid-column: 1 / 7; grid-row: 1 / 3; }
@@ -2079,65 +2014,15 @@
   </section>
 
   <!-- ============================================================
-       3. CÓMO FUNCIONA
-       ============================================================ -->
-  <section id="como-funciona" class="section">
-    <div class="container">
-      <div class="center reveal" style="margin-bottom: 60px;">
-        <span class="tag">Cómo funciona</span>
-        <h2 class="section-title">Tres pasos y el pato está listo</h2>
-        <p class="section-sub" style="margin: 0 auto;">
-          Sin configuración complicada. Sin curva de aprendizaje.
-          Solo habla.
-        </p>
-      </div>
-
-      <div class="steps-grid">
-        <div class="step-card reveal">
-          <div class="step-num">1</div>
-          <span class="step-icon">🎙️</span>
-          <h3 class="step-title">Habla con el pato</h3>
-          <p class="step-desc">
-            Doble clic en el pato y el micrófono se activa.
-            Cuéntale tu problema, tu duda o lo que sea. Sin filtros.
-          </p>
-        </div>
-
-        <div class="step-card reveal">
-          <div class="step-num">2</div>
-          <span class="step-icon">🤔</span>
-          <h3 class="step-title">El pato piensa</h3>
-          <p class="step-desc">
-            Con IA local en tu ordenador, sin internet,
-            sin enviar tus datos a ningún lado.
-            Todo se queda contigo.
-          </p>
-        </div>
-
-        <div class="step-card reveal">
-          <div class="step-num">3</div>
-          <span class="step-icon">💬</span>
-          <h3 class="step-title">El pato responde</h3>
-          <p class="step-desc">
-            Con personalidad. Puede ser mentor paciente
-            o brutalmente directo.
-            Tú eliges cómo quieres que te hable.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       CÓMO USAR
+       3. CÓMO USAR
        ============================================================ -->
   <section id="como-usar" class="section">
     <div class="container">
       <div class="como-usar-header reveal">
-        <span class="tag" style="background: rgba(255,215,0,0.15); color: var(--yellow);">Flujo de uso</span>
-        <h2 class="section-title">Cinco pasos, un pato</h2>
+        <span class="tag" style="background: rgba(255,215,0,0.15); color: var(--yellow);">Cómo usar</span>
+        <h2 class="section-title">Cinco pasos y el pato está listo</h2>
         <p class="section-sub">
-          Así funciona una sesión típica con DebugDuck.
+          Sin configuración. Solo habla.
         </p>
       </div>
 
@@ -2148,8 +2033,8 @@
             🖱️
             <span class="flow-num">1</span>
           </div>
-          <p class="flow-title">Doble clic</p>
-          <p class="flow-desc">Abre DebugDuck y haz doble clic en el pato para activarlo.</p>
+          <p class="flow-title">Doble clic en el pato</p>
+          <p class="flow-desc">Activa el micrófono desde cualquier app. O usa Cmd+Shift+D sin cambiar de ventana.</p>
         </div>
 
         <div class="flow-arrow">→</div>
@@ -2159,8 +2044,8 @@
             🎙️
             <span class="flow-num">2</span>
           </div>
-          <p class="flow-title">Habla</p>
-          <p class="flow-desc">Explica tu problema, duda o bloqueo. En voz alta, sin filtros.</p>
+          <p class="flow-title">Habla tu pregunta</p>
+          <p class="flow-desc">En cualquier idioma, sobre cualquier tema. Sin filtros.</p>
         </div>
 
         <div class="flow-arrow">→</div>
@@ -2171,7 +2056,7 @@
             <span class="flow-num">3</span>
           </div>
           <p class="flow-title">El pato piensa</p>
-          <p class="flow-desc">La IA local procesa tu mensaje. Cero internet, cero datos enviados.</p>
+          <p class="flow-desc">Con IA local en tu ordenador. Sin internet, sin enviar datos a ningún lado.</p>
         </div>
 
         <div class="flow-arrow">→</div>
@@ -2181,8 +2066,8 @@
             💬
             <span class="flow-num">4</span>
           </div>
-          <p class="flow-title">Responde</p>
-          <p class="flow-desc">El pato te devuelve una respuesta con su personalidad elegida.</p>
+          <p class="flow-title">El pato responde</p>
+          <p class="flow-desc">Con personalidad ajustable — de mentor paciente a brutalmente directo.</p>
         </div>
 
         <div class="flow-arrow">→</div>
@@ -2192,8 +2077,8 @@
             🎉
             <span class="flow-num">5</span>
           </div>
-          <p class="flow-title">¡Eureka!</p>
-          <p class="flow-desc">Cuando lo entiendas, pulsa Eureka. Confeti y pato contento.</p>
+          <p class="flow-title">Eureka o Pomo</p>
+          <p class="flow-desc">Celebra si lo entendiste o arranca un Pomodoro de 25 minutos.</p>
         </div>
 
       </div>
@@ -3273,16 +3158,12 @@
         hist_p2:'Le expliqué a mis compañeros el método del rubber duck debugging — hablarle a un objeto inanimado para ordenar tus ideas. Lo adoptaron para todo: sus proyectos, sus decisiones, su vida.',
         hist_p3a:'Eso confirmó algo que ya sospechaba: ', hist_p3b:'explicar tus problemas en voz alta funciona para todo el mundo', hist_p3c:', no solo para programadores.',
         hist_p4:'DebugDuck nació de esas dos ideas.',
-        cf_tag:'Cómo funciona', cf_title:'Tres pasos y el pato está listo', cf_sub:'Sin configuración complicada. Sin curva de aprendizaje. Solo habla.',
-        cf_s1:'Habla con el pato', cf_s1d:'Doble clic en el pato y el micrófono se activa. Cuéntale tu problema, tu duda o lo que sea. Sin filtros.',
-        cf_s2:'El pato piensa',   cf_s2d:'Con IA local en tu ordenador, sin internet, sin enviar tus datos a ningún lado. Todo se queda contigo.',
-        cf_s3:'El pato responde', cf_s3d:'Con personalidad. Puede ser mentor paciente o brutalmente directo. Tú eliges cómo quieres que te hable.',
-        cu_tag:'Flujo de uso', cu_title:'Cinco pasos, un pato', cu_sub:'Así funciona una sesión típica con DebugDuck.',
-        cu_s1:'Doble clic', cu_s1d:'Abre DebugDuck y haz doble clic en el pato para activarlo.',
-        cu_s2:'Habla',          cu_s2d:'Explica tu problema, duda o bloqueo. En voz alta, sin filtros.',
-        cu_s3:'El pato piensa', cu_s3d:'La IA local procesa tu mensaje. Cero internet, cero datos enviados.',
-        cu_s4:'Responde',       cu_s4d:'El pato te devuelve una respuesta con su personalidad elegida.',
-        cu_s5:'¡Eureka!',       cu_s5d:'Cuando lo entiendas, pulsa Eureka. Confeti y pato contento.',
+        cu_tag:'Cómo usar', cu_title:'Cinco pasos y el pato está listo', cu_sub:'Sin configuración. Solo habla.',
+        cu_s1:'Doble clic en el pato', cu_s1d:'Activa el micrófono desde cualquier app. O usa Cmd+Shift+D sin cambiar de ventana.',
+        cu_s2:'Habla tu pregunta',     cu_s2d:'En cualquier idioma, sobre cualquier tema. Sin filtros.',
+        cu_s3:'El pato piensa',        cu_s3d:'Con IA local en tu ordenador. Sin internet, sin enviar datos a ningún lado.',
+        cu_s4:'El pato responde',      cu_s4d:'Con personalidad ajustable — de mentor paciente a brutalmente directo.',
+        cu_s5:'Eureka o Pomo',         cu_s5d:'Celebra si lo entendiste o arranca un Pomodoro de 25 minutos.',
         feat_tag:'Características', feat_title:'Todo lo que hace el pato', feat_sub:'Diseñado para que se sienta vivo, no robótico.',
         feat1:'Modo Tamagotchi',          feat1d:'Cuida al pato o se pone de mal humor. Su estado de ánimo afecta cómo te responde. No lo abandones.',
         feat2:'Personalidad ajustable',   feat2d:'Slider de mentor paciente a sin piedad. Perfecto para principiantes o para seniors que quieren honestidad brutal.',
@@ -3339,16 +3220,12 @@
         hist_p2:'I explained rubber duck debugging to my classmates — talking to an inanimate object to organize your thoughts. They adopted it for everything: projects, decisions, life.',
         hist_p3a:'That confirmed something I already suspected: ', hist_p3b:'explaining your problems out loud works for everyone', hist_p3c:', not just developers.',
         hist_p4:'DebugDuck was born from those two ideas.',
-        cf_tag:'How it works', cf_title:'Three steps and the duck is ready', cf_sub:'No complex setup. No learning curve. Just talk.',
-        cf_s1:'Talk to the duck',  cf_s1d:'Double-click the duck and the mic activates. Tell it your problem, question or anything. No filter.',
-        cf_s2:'The duck thinks',   cf_s2d:'With local AI on your computer, no internet, no data sent anywhere. Everything stays with you.',
-        cf_s3:'The duck replies',  cf_s3d:'With personality. Patient mentor or brutally direct — you choose how it talks to you.',
-        cu_tag:'Usage flow', cu_title:'Five steps, one duck', cu_sub:'This is how a typical DebugDuck session works.',
-        cu_s1:'Double click', cu_s1d:'Open DebugDuck and double-click the duck to activate it.',
-        cu_s2:'Talk',          cu_s2d:'Explain your problem, doubt or blocker. Out loud, no filter.',
-        cu_s3:'The duck thinks', cu_s3d:'The local AI processes your message. Zero internet, zero data sent.',
-        cu_s4:'It replies',    cu_s4d:'The duck returns an answer with its chosen personality.',
-        cu_s5:'Eureka!',       cu_s5d:'When you get it, press Eureka. Confetti and a happy duck.',
+        cu_tag:'How to use', cu_title:'Five steps and the duck is ready', cu_sub:'No setup. Just talk.',
+        cu_s1:'Double click the duck',   cu_s1d:'Activates the mic from any app. Or use Cmd+Shift+D without switching windows.',
+        cu_s2:'Ask your question',       cu_s2d:'In any language, on any topic. No filter.',
+        cu_s3:'The duck thinks',         cu_s3d:'With local AI on your computer. No internet, no data sent anywhere.',
+        cu_s4:'The duck replies',        cu_s4d:'With adjustable personality — from patient mentor to brutally direct.',
+        cu_s5:'Eureka or Pomo',          cu_s5d:'Celebrate if you got it or start a 25-minute Pomodoro.',
         feat_tag:'Features', feat_title:'Everything the duck does', feat_sub:'Designed to feel alive, not robotic.',
         feat1:'Tamagotchi Mode',          feat1d:'Neglect the duck and it gets moody. Its mood affects how it responds. Don\'t leave it alone.',
         feat2:'Adjustable personality',   feat2d:'Slider from patient mentor to no mercy. Perfect for beginners or seniors who want brutal honesty.',
@@ -3405,16 +3282,12 @@
         hist_p2:'J\'ai expliqué à mes camarades la technique du rubber duck debugging — parler à un objet inanimé pour organiser ses idées. Ils l\'ont adopté pour tout : projets, décisions, vie quotidienne.',
         hist_p3a:'Cela a confirmé quelque chose que je suspectais déjà : ', hist_p3b:'expliquer ses problèmes à voix haute fonctionne pour tout le monde', hist_p3c:', pas seulement pour les développeurs.',
         hist_p4:'DebugDuck est né de ces deux idées.',
-        cf_tag:'Comment ça marche', cf_title:'Trois étapes et le canard est prêt', cf_sub:'Pas de configuration complexe. Pas de courbe d\'apprentissage. Parle simplement.',
-        cf_s1:'Parle au canard',      cf_s1d:'Double-clic sur le canard et le micro s\'active. Raconte ton problème, ta question ou autre chose. Sans filtre.',
-        cf_s2:'Le canard réfléchit', cf_s2d:'Avec une IA locale sur ton ordinateur, sans internet, sans envoyer tes données nulle part. Tout reste chez toi.',
-        cf_s3:'Le canard répond',    cf_s3d:'Avec de la personnalité. Mentor patient ou directement brutal — tu choisis comment il te parle.',
-        cu_tag:'Flux d\'utilisation', cu_title:'Cinq étapes, un canard', cu_sub:'Voici comment se déroule une session typique avec DebugDuck.',
-        cu_s1:'Double-clic', cu_s1d:'Ouvre DebugDuck et double-clique sur le canard pour l\'activer.',
-        cu_s2:'Parle',              cu_s2d:'Explique ton problème, doute ou blocage. À voix haute, sans filtre.',
-        cu_s3:'Le canard réfléchit', cu_s3d:'L\'IA locale traite ton message. Zéro internet, zéro données envoyées.',
-        cu_s4:'Il répond',          cu_s4d:'Le canard te retourne une réponse avec sa personnalité choisie.',
-        cu_s5:'Eurêka !',           cu_s5d:'Quand tu comprends, appuie sur Eurêka. Confettis et canard content.',
+        cu_tag:'Utilisation', cu_title:'Cinq étapes et le canard est prêt', cu_sub:'Sans configuration. Parle simplement.',
+        cu_s1:'Double-clic sur le canard', cu_s1d:'Active le micro depuis n\'importe quelle app. Ou utilise Cmd+Shift+D sans changer de fenêtre.',
+        cu_s2:'Pose ta question',          cu_s2d:'Dans n\'importe quelle langue, sur n\'importe quel sujet. Sans filtre.',
+        cu_s3:'Le canard réfléchit',       cu_s3d:'Avec une IA locale sur ton ordinateur. Sans internet, sans envoyer de données.',
+        cu_s4:'Le canard répond',          cu_s4d:'Avec une personnalité réglable — de mentor patient à brutalement direct.',
+        cu_s5:'Eurêka ou Pomo',            cu_s5d:'Célèbre si tu as compris ou lance un Pomodoro de 25 minutes.',
         feat_tag:'Fonctionnalités', feat_title:'Tout ce que fait le canard', feat_sub:'Conçu pour paraître vivant, pas robotique.',
         feat1:'Mode Tamagotchi',          feat1d:'Néglige le canard et il devient grincheux. Son humeur affecte ses réponses. Ne l\'abandonne pas.',
         feat2:'Personnalité réglable',    feat2d:'Curseur de mentor patient à sans pitié. Parfait pour les débutants ou les seniors qui veulent une honnêteté brutale.',
@@ -3471,16 +3344,12 @@
         hist_p2:'Ich erklärte meinen Mitschülern die Rubber-Duck-Debugging-Methode — mit einem leblosen Objekt sprechen, um die Gedanken zu ordnen. Sie übernahmen es für alles: Projekte, Entscheidungen, das Leben.',
         hist_p3a:'Das bestätigte etwas, das ich bereits ahnte: ', hist_p3b:'Probleme laut zu erklären funktioniert für jeden', hist_p3c:', nicht nur für Entwickler.',
         hist_p4:'DebugDuck entstand aus diesen beiden Ideen.',
-        cf_tag:'Wie es funktioniert', cf_title:'Drei Schritte und die Ente ist bereit', cf_sub:'Keine komplizierte Einrichtung. Keine Lernkurve. Einfach sprechen.',
-        cf_s1:'Mit der Ente sprechen', cf_s1d:'Doppelklick auf die Ente und das Mikrofon aktiviert sich. Erkläre dein Problem, deine Frage oder was auch immer. Ungefiltert.',
-        cf_s2:'Die Ente denkt nach',  cf_s2d:'Mit lokaler KI auf deinem Computer, ohne Internet, ohne Daten irgendwohin zu senden. Alles bleibt bei dir.',
-        cf_s3:'Die Ente antwortet',   cf_s3d:'Mit Persönlichkeit. Geduldiger Mentor oder brutal direkt — du wählst, wie sie mit dir spricht.',
-        cu_tag:'Arbeitsablauf', cu_title:'Fünf Schritte, eine Ente', cu_sub:'So läuft eine typische DebugDuck-Sitzung ab.',
-        cu_s1:'Doppelklick', cu_s1d:'Öffne DebugDuck und doppelklicke auf die Ente, um sie zu aktivieren.',
-        cu_s2:'Spreche',              cu_s2d:'Erkläre dein Problem, deinen Zweifel oder deine Blockade. Laut, ungefiltert.',
-        cu_s3:'Die Ente denkt nach',  cu_s3d:'Die lokale KI verarbeitet deine Nachricht. Kein Internet, keine gesendeten Daten.',
-        cu_s4:'Antwort',              cu_s4d:'Die Ente gibt eine Antwort mit ihrer gewählten Persönlichkeit.',
-        cu_s5:'Heureka!',             cu_s5d:'Wenn du es verstehst, drücke Heureka. Konfetti und glückliche Ente.',
+        cu_tag:'Verwendung', cu_title:'Fünf Schritte und die Ente ist bereit', cu_sub:'Keine Einrichtung. Einfach sprechen.',
+        cu_s1:'Doppelklick auf die Ente', cu_s1d:'Aktiviert das Mikrofon aus jeder App. Oder Cmd+Shift+D ohne Fensterwechsel.',
+        cu_s2:'Stelle deine Frage',       cu_s2d:'In jeder Sprache, zu jedem Thema. Ungefiltert.',
+        cu_s3:'Die Ente denkt nach',      cu_s3d:'Mit lokaler KI auf deinem Computer. Kein Internet, keine gesendeten Daten.',
+        cu_s4:'Die Ente antwortet',       cu_s4d:'Mit anpassbarer Persönlichkeit — von geduldiger Mentorin bis brutal direkt.',
+        cu_s5:'Heureka oder Pomo',        cu_s5d:'Feier wenn du es verstanden hast oder starte einen 25-Minuten-Pomodoro.',
         feat_tag:'Funktionen', feat_title:'Alles was die Ente kann', feat_sub:'Gestaltet, damit es sich lebendig anfühlt, nicht roboterhaft.',
         feat1:'Tamagotchi-Modus',        feat1d:'Vernachlässige die Ente und sie wird schlecht gelaunt. Ihre Stimmung beeinflusst ihre Antworten. Lass sie nicht allein.',
         feat2:'Anpassbare Persönlichkeit', feat2d:'Schieberegler von geduldigem Mentor bis zu gnadenlos. Perfekt für Anfänger oder Profis, die brutale Ehrlichkeit wollen.',
@@ -3537,16 +3406,12 @@
         hist_p2:'Expliquei aos meus colegas o método do rubber duck debugging — falar com um objeto inanimado para organizar os pensamentos. Eles adotaram para tudo: projetos, decisões, vida.',
         hist_p3a:'Isso confirmou algo que eu já suspeitava: ', hist_p3b:'explicar seus problemas em voz alta funciona para todos', hist_p3c:', não apenas para desenvolvedores.',
         hist_p4:'O DebugDuck nasceu dessas duas ideias.',
-        cf_tag:'Como funciona', cf_title:'Três passos e o pato está pronto', cf_sub:'Sem configuração complicada. Sem curva de aprendizado. Só fale.',
-        cf_s1:'Fale com o pato',  cf_s1d:'Clique duas vezes no pato e o microfone se ativa. Conte seu problema, dúvida ou o que for. Sem filtros.',
-        cf_s2:'O pato pensa',     cf_s2d:'Com IA local no seu computador, sem internet, sem enviar seus dados para lugar nenhum. Tudo fica com você.',
-        cf_s3:'O pato responde',  cf_s3d:'Com personalidade. Pode ser mentor paciente ou brutalmente direto. Você escolhe como quer que ele fale com você.',
-        cu_tag:'Fluxo de uso', cu_title:'Cinco passos, um pato', cu_sub:'Veja como funciona uma sessão típica com o DebugDuck.',
-        cu_s1:'Clique duplo', cu_s1d:'Abra o DebugDuck e clique duas vezes no pato para ativá-lo.',
-        cu_s2:'Fale',          cu_s2d:'Explique seu problema, dúvida ou bloqueio. Em voz alta, sem filtros.',
-        cu_s3:'O pato pensa',  cu_s3d:'A IA local processa sua mensagem. Zero internet, zero dados enviados.',
-        cu_s4:'Responde',      cu_s4d:'O pato retorna uma resposta com sua personalidade escolhida.',
-        cu_s5:'Eureka!',       cu_s5d:'Quando entender, pressione Eureka. Confetes e pato feliz.',
+        cu_tag:'Como usar', cu_title:'Cinco passos e o pato está pronto', cu_sub:'Sem configuração. Só fale.',
+        cu_s1:'Clique duplo no pato', cu_s1d:'Ativa o microfone de qualquer app. Ou use Cmd+Shift+D sem trocar de janela.',
+        cu_s2:'Faça sua pergunta',    cu_s2d:'Em qualquer idioma, sobre qualquer assunto. Sem filtros.',
+        cu_s3:'O pato pensa',         cu_s3d:'Com IA local no seu computador. Sem internet, sem enviar dados.',
+        cu_s4:'O pato responde',      cu_s4d:'Com personalidade ajustável — de mentor paciente a brutalmente direto.',
+        cu_s5:'Eureka ou Pomo',       cu_s5d:'Celebre se entendeu ou inicie um Pomodoro de 25 minutos.',
         feat_tag:'Funcionalidades', feat_title:'Tudo que o pato faz', feat_sub:'Projetado para parecer vivo, não robótico.',
         feat1:'Modo Tamagotchi',      feat1d:'Cuide do pato ou ele fica de mau humor. Seu estado de ânimo afeta como ele responde. Não o abandone.',
         feat2:'Personalidade ajustável', feat2d:'Slider de mentor paciente a sem piedade. Perfeito para iniciantes ou sêniors que querem honestidade brutal.',
@@ -3624,14 +3489,6 @@
         <p>${t.hist_p2}</p>
         <p>${t.hist_p3a}<strong>${t.hist_p3b}</strong>${t.hist_p3c}</p>
         <p>${t.hist_p4}</p>`);
-
-      // Como funciona
-      setText('#como-funciona .tag', t.cf_tag);
-      setText('#como-funciona .section-title', t.cf_title);
-      setText('#como-funciona .section-sub', t.cf_sub);
-      const cfCards = $$('#como-funciona .step-card');
-      const cfData = [[t.cf_s1,t.cf_s1d],[t.cf_s2,t.cf_s2d],[t.cf_s3,t.cf_s3d]];
-      cfCards.forEach((c,i)=>{if(cfData[i]){c.querySelector('.step-title').textContent=cfData[i][0];c.querySelector('.step-desc').textContent=cfData[i][1];}});
 
       // Como usar
       setText('#como-usar .tag', t.cu_tag);
