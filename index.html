@@ -695,6 +695,52 @@
     }
     .req-link:hover { color: #7a6200; border-color: #7a6200; }
 
+    .req-item-top { align-items: flex-start !important; }
+    .req-item-inner { display: flex; flex-direction: column; gap: 6px; }
+    .req-win-note {
+      font-size: 0.78rem;
+      color: #92400e;
+      line-height: 1.5;
+      background: #fff8e1;
+      border-radius: 6px;
+      padding: 6px 10px;
+    }
+    .req-win-note strong { font-weight: 700; }
+
+    .lm-guide { margin-top: 36px; text-align: left; }
+    .lm-guide-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.92rem; font-weight: 700; color: var(--dark);
+      margin-bottom: 18px; text-align: center;
+    }
+    .lm-steps { display: flex; flex-direction: column; gap: 12px; }
+    .lm-step {
+      display: flex; gap: 16px; align-items: flex-start;
+      background: var(--white); border-radius: var(--radius-sm);
+      padding: 15px 18px; box-shadow: var(--shadow);
+    }
+    .lm-step-num {
+      width: 30px; height: 30px; background: var(--yellow);
+      color: var(--dark); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.88rem; flex-shrink: 0; margin-top: 1px;
+    }
+    .lm-step-body { flex: 1; }
+    .lm-step-title { font-weight: 700; font-size: 0.93rem; color: var(--dark); margin-bottom: 4px; }
+    .lm-step-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.65; }
+    .lm-step-desc code {
+      background: var(--dark); color: var(--yellow);
+      padding: 1px 6px; border-radius: 4px;
+      font-family: 'Space Mono', monospace; font-size: 0.78rem;
+    }
+    .lm-tip {
+      background: var(--yellow-light);
+      border-left: 3px solid var(--yellow);
+      border-radius: 0 8px 8px 0;
+      padding: 11px 16px; font-size: 0.82rem;
+      color: var(--dark); line-height: 1.6; margin-top: 8px;
+    }
+
     /* ================================================================
        6. DESCARGA CTA
        ================================================================ */
@@ -2818,9 +2864,12 @@
             <div class="req-check">✓</div>
             <span>Mac con Apple Silicon &nbsp;(M1 · M2 · M3 · M4)</span>
           </div>
-          <div class="req-item">
+          <div class="req-item req-item-top">
             <div class="req-check">✓</div>
-            <span>Windows 10 / 11 &nbsp;(x64)</span>
+            <div class="req-item-inner">
+              <span>Windows 10 / 11 &nbsp;(x64)</span>
+              <p class="req-win-note">⚠️ Si LM Studio muestra error al cargar el modelo, activa <strong>CPU only</strong> en la configuración o descarga un modelo más pequeño como <strong>phi-3-mini</strong></p>
+            </div>
           </div>
           <div class="req-item">
             <div class="req-check">✓</div>
@@ -2832,11 +2881,45 @@
           </div>
         </div>
 
-        <a href="https://github.com/CarlosVallejoRuiz/DebugDuck#readme"
-           target="_blank" rel="noopener noreferrer"
-           class="req-link">
-          Cómo configurar LM Studio →
-        </a>
+        <div class="lm-guide reveal">
+          <h3 class="lm-guide-title">Cómo configurar LM Studio en 4 pasos</h3>
+          <div class="lm-steps">
+
+            <div class="lm-step">
+              <div class="lm-step-num">1</div>
+              <div class="lm-step-body">
+                <p class="lm-step-title">⬇️ Descarga LM Studio</p>
+                <p class="lm-step-desc">Ve a <strong>lmstudio.ai</strong> y descarga la versión para tu sistema. Es gratis y no necesitas cuenta.</p>
+              </div>
+            </div>
+
+            <div class="lm-step">
+              <div class="lm-step-num">2</div>
+              <div class="lm-step-body">
+                <p class="lm-step-title">🔍 Busca y descarga un modelo</p>
+                <p class="lm-step-desc">Haz clic en el icono de lupa, escribe <code>mistral</code> y descarga el primer resultado. Si tienes poco RAM, busca <code>phi-3-mini</code> en su lugar.</p>
+              </div>
+            </div>
+
+            <div class="lm-step">
+              <div class="lm-step-num">3</div>
+              <div class="lm-step-body">
+                <p class="lm-step-title">⇄ Inicia el servidor local</p>
+                <p class="lm-step-desc">Haz clic en el icono <strong>&lt;-&gt; Local Server</strong>, selecciona el modelo descargado y pulsa <strong>Start Server</strong>. Espera a ver <code>Running on port 1234</code> ✅</p>
+              </div>
+            </div>
+
+            <div class="lm-step">
+              <div class="lm-step-num">4</div>
+              <div class="lm-step-body">
+                <p class="lm-step-title">🦆 Abre DebugDuck</p>
+                <p class="lm-step-desc">DebugDuck detecta el servidor automáticamente. Sin configuración adicional — solo habla con el pato.</p>
+              </div>
+            </div>
+
+          </div>
+          <div class="lm-tip">💡 <strong>¿Poco RAM?</strong> Busca <code>phi-3-mini</code> en lugar de <code>mistral</code> — funciona igual de bien en equipos con 8 GB o menos.</div>
+        </div>
       </div>
     </div>
   </section>
